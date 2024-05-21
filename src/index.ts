@@ -1,9 +1,10 @@
-import { limitlesspc } from './factory'
+import { limitlesspc } from "./factory";
 
-export * from './configs'
-export * from './factory'
-export * from './globs'
-export * from './types'
-export * from './utils'
+export * from "./configs";
+export * from "./factory";
+export * from "./globs";
+export * from "./types";
+export * from "./utils";
 
-export default limitlesspc
+// eslint-disable-next-line unicorn/prefer-export-from
+export default limitlesspc;
