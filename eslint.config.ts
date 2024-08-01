@@ -1,5 +1,4 @@
-
-import { limitlesspc } from './src'
+import { limitlesspc } from "./src";
 
 export default limitlesspc(
   {
@@ -7,9 +6,9 @@ export default limitlesspc(
     typescript: true,
   },
   {
-    files: ['src/**/*.ts'],
+    files: ["src/**/*.ts"],
     rules: {
-      'perfectionist/sort-objects': 'error',
+      "perfectionist/sort-objects": "error",
     },
   },
-)
+);
