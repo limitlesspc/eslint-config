@@ -4,7 +4,7 @@ import { pluginAntfu, pluginImport } from "../plugins";
 export async function imports(): Promise<TypedFlatConfigItem[]> {
   return [
     {
-      name: "iz7n/imports/rules",
+      name: "limitlesspc/imports/rules",
       plugins: {
         antfu: pluginAntfu,
         import: pluginImport,

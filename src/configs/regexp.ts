@@ -23,7 +23,7 @@ export async function regexp(
   return [
     {
       ...config,
-      name: "iz7n/regexp/rules",
+      name: "limitlesspc/regexp/rules",
       rules: {
         ...rules,
         ...options.overrides,

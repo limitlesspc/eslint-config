@@ -1,6 +1,6 @@
-import { iz7n } from "./src";
+import { limitlesspc } from "./src";
 
-export default iz7n(
+export default limitlesspc(
   {
     typescript: true,
   },

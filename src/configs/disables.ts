@@ -6,7 +6,7 @@ export async function disables(): Promise<TypedFlatConfigItem[]> {
   return [
     {
       files: [`**/scripts/${GLOB_SRC}`],
-      name: "iz7n/disables/scripts",
+      name: "limitlesspc/disables/scripts",
       rules: {
         "antfu/no-top-level-await": "off",
         "no-console": "off",
@@ -15,7 +15,7 @@ export async function disables(): Promise<TypedFlatConfigItem[]> {
     },
     {
       files: [`**/cli/${GLOB_SRC}`, `**/cli.${GLOB_SRC_EXT}`],
-      name: "iz7n/disables/cli",
+      name: "limitlesspc/disables/cli",
       rules: {
         "antfu/no-top-level-await": "off",
         "no-console": "off",
@@ -23,7 +23,7 @@ export async function disables(): Promise<TypedFlatConfigItem[]> {
     },
     {
       files: ["**/bin/**/*", `**/bin.${GLOB_SRC_EXT}`],
-      name: "iz7n/disables/bin",
+      name: "limitlesspc/disables/bin",
       rules: {
         "antfu/no-import-dist": "off",
         "antfu/no-import-node-modules-by-path": "off",
@@ -31,7 +31,7 @@ export async function disables(): Promise<TypedFlatConfigItem[]> {
     },
     {
       files: ["**/*.d.?([cm])ts"],
-      name: "iz7n/disables/dts",
+      name: "limitlesspc/disables/dts",
       rules: {
         "eslint-comments/no-unlimited-disable": "off",
         "import/no-duplicates": "off",
@@ -41,7 +41,7 @@ export async function disables(): Promise<TypedFlatConfigItem[]> {
     },
     {
       files: ["**/*.{test,spec}.([tj])s?(x)"],
-      name: "iz7n/disables/test",
+      name: "limitlesspc/disables/test",
       rules: {
         "antfu/no-top-level-await": "off",
         "no-unused-expressions": "off",
@@ -49,14 +49,14 @@ export async function disables(): Promise<TypedFlatConfigItem[]> {
     },
     {
       files: ["**/*.js", "**/*.cjs"],
-      name: "iz7n/disables/cjs",
+      name: "limitlesspc/disables/cjs",
       rules: {
         "ts/no-require-imports": "off",
       },
     },
     {
       files: [`**/*.config.${GLOB_SRC_EXT}`, `**/*.config.*.${GLOB_SRC_EXT}`],
-      name: "iz7n/disables/config-files",
+      name: "limitlesspc/disables/config-files",
       rules: {
         "antfu/no-top-level-await": "off",
         "no-console": "off",
