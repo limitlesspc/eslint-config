@@ -1,13 +1,3 @@
-import type { Linter } from "eslint";
-import type { RuleOptions } from "./typegen";
-import type {
-  Awaitable,
-  ConfigNames,
-  OptionsConfig,
-  TypedFlatConfigItem,
-} from "./types";
-import { FlatConfigComposer } from "eslint-flat-config-utils";
-import { isPackageExists } from "local-pkg";
 import {
   command,
   comments,
@@ -27,7 +17,17 @@ import {
   disables,
 } from "./configs";
 import { regexp } from "./configs/regexp";
+import type { RuleOptions } from "./typegen";
+import type {
+  Awaitable,
+  ConfigNames,
+  OptionsConfig,
+  TypedFlatConfigItem,
+} from "./types";
 import { interopDefault } from "./utils";
+import type { Linter } from "eslint";
+import { FlatConfigComposer } from "eslint-flat-config-utils";
+import { isPackageExists } from "local-pkg";
 
 const flatConfigProps = [
   "name",
@@ -37,12 +37,12 @@ const flatConfigProps = [
   "plugins",
   "rules",
   "settings",
-] satisfies (keyof TypedFlatConfigItem)[];
+] satisfies Array<keyof TypedFlatConfigItem>;
 
 export const defaultPluginRenaming = {
   "@typescript-eslint": "ts",
   "import-x": "import",
-  n: "node",
+  "n": "node",
 };
 
 /**
@@ -78,7 +78,7 @@ export function limitlesspc(
   if (enableGitignore) {
     if (typeof enableGitignore !== "boolean") {
       configs.push(
-        interopDefault(import("eslint-config-flat-gitignore")).then((r) => [
+        interopDefault(import("eslint-config-flat-gitignore")).then(r => [
           r({
             name: "limitlesspc/gitignore",
             ...enableGitignore,
@@ -87,7 +87,7 @@ export function limitlesspc(
       );
     } else {
       configs.push(
-        interopDefault(import("eslint-config-flat-gitignore")).then((r) => [
+        interopDefault(import("eslint-config-flat-gitignore")).then(r => [
           r({
             name: "limitlesspc/gitignore",
             strict: false,
@@ -98,10 +98,6 @@ export function limitlesspc(
   }
 
   const typescriptOptions = resolveSubOptions(options, "typescript");
-  const tsconfigPath =
-    "tsconfigPath" in typescriptOptions
-      ? typescriptOptions.tsconfigPath
-      : undefined;
 
   configs.push(
     ignores(options.ignores),
@@ -160,9 +156,13 @@ export function limitlesspc(
   // We pick the known keys as ESLint would do schema validation
   const fusedConfig = {} as TypedFlatConfigItem;
   for (const key of flatConfigProps) {
-    if (key in options) fusedConfig[key] = options[key] as any;
+    if (key in options) {
+      fusedConfig[key] = options[key] as any;
+    }
   }
-  if (Object.keys(fusedConfig).length) configs.push([fusedConfig]);
+  if (Object.keys(fusedConfig).length) {
+    configs.push([fusedConfig]);
+  }
 
   let composer = new FlatConfigComposer<TypedFlatConfigItem, ConfigNames>();
 
