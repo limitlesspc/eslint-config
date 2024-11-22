@@ -5,7 +5,7 @@ export async function command(): Promise<TypedFlatConfigItem[]> {
   return [
     {
       ...createCommand(),
-      name: "limitlesspc/command/rules",
+      name: "iz7n/command/rules",
     },
   ];
 }

@@ -1,9 +1,9 @@
 import { createJiti } from "jiti";
 
 const jiti = createJiti(import.meta.url);
-const { limitlesspc } = await jiti.import("./src");
+const { iz7n } = await jiti.import("./src");
 
-export default limitlesspc(
+export default iz7n(
   {
     type: "lib",
     typescript: true,

@@ -12,7 +12,7 @@ export async function jsx(): Promise<TypedFlatConfigItem[]> {
           },
         },
       },
-      name: "limitlesspc/jsx/setup",
+      name: "iz7n/jsx/setup",
     },
   ];
 }

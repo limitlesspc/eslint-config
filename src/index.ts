@@ -1,4 +1,4 @@
-import { limitlesspc } from "./factory";
+import { iz7n } from "./factory";
 
 export * from "./configs";
 export * from "./factory";
@@ -7,4 +7,4 @@ export * from "./types";
 export * from "./utils";
 
 // eslint-disable-next-line unicorn/prefer-export-from
-export default limitlesspc;
+export default iz7n;

@@ -31,7 +31,7 @@ export async function javascript(
       linterOptions: {
         reportUnusedDisableDirectives: true,
       },
-      name: "limitlesspc/javascript/rules",
+      name: "iz7n/javascript/rules",
       plugins: {
         "unused-imports": pluginUnusedImports,
       },
