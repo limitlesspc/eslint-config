@@ -7,7 +7,7 @@ export async function ignores(
   return [
     {
       ignores: [...GLOB_EXCLUDE, ...userIgnores],
-      name: "iz7n/ignores",
+      name: "limitlesspc/ignores",
     },
   ];
 }

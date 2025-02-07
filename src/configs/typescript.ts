@@ -91,14 +91,14 @@ export async function typescript(
           ...(parserOptions as any),
         },
       },
-      name: `iz7n/typescript/${typeAware ? "type-aware-parser" : "parser"}`,
+      name: `limitlesspc/typescript/${typeAware ? "type-aware-parser" : "parser"}`,
     };
   }
 
   return [
     {
       // Install the plugins without globs, so they can be configured separately.
-      name: "iz7n/typescript/setup",
+      name: "limitlesspc/typescript/setup",
       plugins: {
         antfu: pluginAntfu,
         ts: pluginTs as any,
@@ -113,7 +113,7 @@ export async function typescript(
     : [makeParser(false, files)]),
     {
       files,
-      name: "iz7n/typescript/rules",
+      name: "limitlesspc/typescript/rules",
       rules: {
         ...renameRules(
           pluginTs.configs["eslint-recommended"].overrides![0].rules!,

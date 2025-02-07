@@ -4,7 +4,7 @@ import type { TypedFlatConfigItem } from "../types";
 export async function comments(): Promise<TypedFlatConfigItem[]> {
   return [
     {
-      name: "iz7n/eslint-comments/rules",
+      name: "limitlesspc/eslint-comments/rules",
       plugins: {
         "eslint-comments": pluginComments,
       },

@@ -4,7 +4,7 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 
 const scopeUrl = fileURLToPath(new URL(".", import.meta.url));
-const isCwdInScope = isPackageExists("@iz7n/eslint-config");
+const isCwdInScope = isPackageExists("@limitlesspc/eslint-config");
 
 export const parserPlain = {
   meta: {
@@ -43,7 +43,7 @@ export async function combine(
  *
  * @example
  * ```ts
- * import { renameRules } from '@iz7n/eslint-config'
+ * import { renameRules } from '@limitlesspc/eslint-config'
  *
  * export default [{
  *   rules: renameRules(
@@ -76,7 +76,7 @@ export function renameRules(
  *
  * @example
  * ```ts
- * import { renamePluginInConfigs } from '@iz7n/eslint-config'
+ * import { renamePluginInConfigs } from '@limitlesspc/eslint-config'
  * import someConfigs from './some-configs'
  *
  * export default renamePluginInConfigs(someConfigs, {
