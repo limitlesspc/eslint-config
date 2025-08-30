@@ -539,11 +539,6 @@ packages:
     resolution: {integrity: sha512-c7hNEllBlenFTHBky65mhq8WD2kbN9Q6gk0bTk8lSBvc554jpXSkST1iePudpt7+A/AQvuHs9EMqjHDXMY1lrA==}
     engines: {node: '>=18.18'}
 
-  '@limitlesspc/prettier-config@1.1.1':
-    resolution: {integrity: sha512-16721vu/ZpaTE+WrchJQNy+cDLVCui8DqeeJW3JJOkCeHNPiVZrG0RD7KUSiYue5/vuh39V8oMwYkpya/CFqsA==}
-    peerDependencies:
-      prettier: '>=3.1.0'
-
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
     engines: {node: '>=12'}
@@ -568,6 +563,11 @@ packages:
 
   '@jsdevtools/ono@7.1.3':
     resolution: {integrity: sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==}
+
+  '@limitlesspc/prettier-config@1.1.1':
+    resolution: {integrity: sha512-ICQn7rzCPeBcRnScAyTycIXbUnu/AHpMdUvf3iulEMwHdoK21HQzXNA5J3k5rKm/MBQcWblWp8vop2MLzbWtPg==}
+    peerDependencies:
+      prettier: '>=3.1.0'
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -2413,10 +2413,6 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.1': {}
 
-  '@limitlesspc/prettier-config@1.1.1(prettier@3.6.2)':
-    dependencies:
-      prettier: 3.6.2
-
   '@isaacs/cliui@8.0.2':
     dependencies:
       string-width: 5.1.2
@@ -2444,6 +2440,10 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
 
   '@jsdevtools/ono@7.1.3': {}
+
+  '@limitlesspc/prettier-config@1.1.1(prettier@3.6.2)':
+    dependencies:
+      prettier: 3.6.2
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
