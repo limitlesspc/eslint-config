@@ -1,47 +1,29 @@
-import {
-  combine,
-  comments,
-  imports,
-  javascript,
-  jsdoc,
-  jsonc,
-  jsx,
-  node,
-  perfectionist,
-  regexp,
-  sortPackageJson,
-  svelte,
-  typescript,
-  unicorn,
-} from "../src";
-import { builtinRules } from "eslint/use-at-your-own-risk";
-import { flatConfigsToRulesDTS } from "eslint-typegen/core";
 import fs from "node:fs/promises";
 
-const configs = await combine(
-  {
-    plugins: {
-      "": {
-        rules: Object.fromEntries(builtinRules.entries()),
-      },
+import { flatConfigsToRulesDTS } from "eslint-typegen/core";
+import { builtinRules } from "eslint/use-at-your-own-risk";
+import { limitlesspc } from "../src/factory";
+
+const configs = await limitlesspc({
+  imports: true,
+  jsonc: true,
+  regexp: true,
+  gitignore: true,
+  svelte: true,
+  typescript: {
+    tsconfigPath: "tsconfig.json",
+    erasableOnly: true,
+  },
+  unicorn: true,
+}).prepend({
+  plugins: {
+    "": {
+      rules: Object.fromEntries(builtinRules.entries()),
     },
   },
-  comments(),
-  imports(),
-  javascript(),
-  jsx(),
-  jsdoc(),
-  jsonc(),
-  node(),
-  perfectionist(),
-  sortPackageJson(),
-  svelte(),
-  regexp(),
-  typescript(),
-  unicorn(),
-);
+});
 
-const configNames = configs.map(i => i.name).filter(Boolean) as string[];
+const configNames = configs.map((i) => i.name).filter(Boolean) as string[];
 
 let dts = await flatConfigsToRulesDTS(configs, {
   includeAugmentation: false,
@@ -49,7 +31,7 @@ let dts = await flatConfigsToRulesDTS(configs, {
 
 dts += `
 // Names of all the configs
-export type ConfigNames = ${configNames.map(i => `'${i}'`).join(" | ")}
+export type ConfigNames = ${configNames.map((i) => `'${i}'`).join(" | ")}
 `;
 
 await fs.writeFile("src/typegen.d.ts", dts);

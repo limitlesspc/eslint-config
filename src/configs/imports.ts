@@ -1,13 +1,17 @@
-import { pluginAntfu, pluginImport } from "../plugins";
-import type { TypedFlatConfigItem } from "../types";
+import { pluginAntfu, pluginImportLite } from "../plugins";
+import type { OptionsOverrides, TypedFlatConfigItem } from "../types";
 
-export async function imports(): Promise<TypedFlatConfigItem[]> {
+export async function imports(
+  options: OptionsOverrides = {},
+): Promise<TypedFlatConfigItem[]> {
+  const { overrides = {} } = options;
+
   return [
     {
       name: "limitlesspc/imports/rules",
       plugins: {
         antfu: pluginAntfu,
-        import: pluginImport,
+        import: pluginImportLite,
       },
       rules: {
         "antfu/import-dedupe": "error",
@@ -33,6 +37,8 @@ export async function imports(): Promise<TypedFlatConfigItem[]> {
         "import/no-self-import": "error",
         "import/no-unused-modules": "warn",
         "no-duplicate-imports": "off",
+
+        ...overrides,
       },
     },
   ];

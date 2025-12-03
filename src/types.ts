@@ -5,22 +5,31 @@ import type { FlatGitignoreOptions } from "eslint-config-flat-gitignore";
 
 export type Awaitable<T> = T | Promise<T>;
 
-export type Rules = RuleOptions;
+export type Rules = Record<string, Linter.RuleEntry<any> | undefined> &
+  RuleOptions;
 
 // eslint-disable-next-line unicorn/prefer-export-from
 export type { ConfigNames };
 
-export type TypedFlatConfigItem = Omit<
-  Linter.Config<Linter.RulesRecord & Rules>,
-  "plugins"
-> & {
-  // Relax plugins type limitation, as most of the plugins did not have correct type info yet.
+/**
+ * An updated version of ESLint's `Linter.Config`, which provides autocompletion
+ * for `rules` and relaxes type limitations for `plugins` and `rules`, because
+ * many plugins still lack proper type definitions.
+ */
+export type TypedFlatConfigItem = Omit<Linter.Config, "plugins" | "rules"> & {
   /**
-   * An object containing a name-value mapping of plugin names to plugin objects. When `files` is specified, these plugins are only available to the matching files.
+   * An object containing a name-value mapping of plugin names to plugin objects.
+   * When `files` is specified, these plugins are only available to the matching files.
    *
    * @see [Using plugins in your configuration](https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new#using-plugins-in-your-configuration)
    */
   plugins?: Record<string, any>;
+
+  /**
+   * An object containing the configured rules. When `files` or `ignores` are
+   * specified, these rule configurations are only available to the matching files.
+   */
+  rules?: Rules;
 };
 
 export interface OptionsFiles {
@@ -31,8 +40,12 @@ export interface OptionsFiles {
 }
 
 export type OptionsTypescript =
-  | (OptionsTypeScriptWithTypes & OptionsOverrides)
-  | (OptionsTypeScriptParserOptions & OptionsOverrides);
+  | (OptionsTypeScriptWithTypes &
+      OptionsOverrides &
+      OptionsTypeScriptErasableOnly)
+  | (OptionsTypeScriptParserOptions &
+      OptionsOverrides &
+      OptionsTypeScriptErasableOnly);
 
 export interface OptionsComponentExts {
   /**
@@ -42,6 +55,15 @@ export interface OptionsComponentExts {
    * @default []
    */
   componentExts?: string[];
+}
+
+export interface OptionsUnicorn extends OptionsOverrides {
+  /**
+   * Include all rules recommended by `eslint-plugin-unicorn`, instead of only ones picked by Anthony.
+   *
+   * @default false
+   */
+  allRecommended?: boolean;
 }
 
 export interface OptionsTypeScriptParserOptions {
@@ -93,6 +115,16 @@ export interface OptionsProjectType {
   type?: "app" | "lib";
 }
 
+export interface OptionsTypeScriptErasableOnly {
+  /**
+   * Enable erasable syntax only rules.
+   *
+   * @see https://github.com/JoshuaKGoldberg/eslint-plugin-erasable-syntax-only
+   * @default false
+   */
+  erasableOnly?: boolean;
+}
+
 export interface OptionsRegExp {
   /**
    * Override rulelevels
@@ -114,6 +146,16 @@ export interface OptionsConfig
   gitignore?: boolean | FlatGitignoreOptions;
 
   /**
+   * Extend the global ignores.
+   *
+   * Passing an array to extends the ignores.
+   * Passing a function to modify the default ignores.
+   *
+   * @default []
+   */
+  ignores?: string[] | ((originals: string[]) => string[]);
+
+  /**
    * Core rules. Can't be disabled.
    */
   javascript?: OptionsOverrides;
@@ -130,7 +172,7 @@ export interface OptionsConfig
   /**
    * Enable JSX related rules.
    *
-   * Currently only stylistic rules are included.
+   * Passing an object to enable JSX accessibility rules.
    *
    * @default true
    */
@@ -141,7 +183,14 @@ export interface OptionsConfig
    *
    * @default true
    */
-  unicorn?: boolean;
+  unicorn?: boolean | OptionsUnicorn;
+
+  /**
+   * Options for eslint-plugin-import-lite.
+   *
+   * @default true
+   */
+  imports?: boolean | OptionsOverrides;
 
   /**
    * Enable JSONC support.
@@ -166,7 +215,7 @@ export interface OptionsConfig
    *
    * @default false
    */
-  svelte?: boolean;
+  svelte?: boolean | OptionsOverrides;
 
   /**
    * Automatically rename plugins in the config.

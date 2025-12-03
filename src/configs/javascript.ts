@@ -10,7 +10,7 @@ export async function javascript(
   return [
     {
       languageOptions: {
-        ecmaVersion: 2022,
+        ecmaVersion: "latest",
         globals: {
           ...globals.browser,
           ...globals.es2021,
@@ -23,7 +23,7 @@ export async function javascript(
           ecmaFeatures: {
             jsx: true,
           },
-          ecmaVersion: 2022,
+          ecmaVersion: "latest",
           sourceType: "module",
         },
         sourceType: "module",
@@ -42,11 +42,11 @@ export async function javascript(
         "block-scoped-var": "error",
         "consistent-this": ["error", "self"],
         "constructor-super": "error",
-        "curly": "warn",
+        curly: "warn",
         "default-case-last": "error",
         "default-param-last": "error",
         "dot-notation": "error",
-        "eqeqeq": ["error", "smart"],
+        eqeqeq: ["error", "smart"],
         "for-direction": "error",
         "func-names": ["error", "as-needed"],
         "func-style": ["error", "declaration", { allowArrowFunctions: true }],
@@ -202,7 +202,7 @@ export async function javascript(
         "prefer-rest-params": "error",
         "prefer-spread": "error",
         "prefer-template": "error",
-        "radix": ["error", "as-needed"],
+        radix: ["error", "as-needed"],
         "require-yield": "error",
         "symbol-description": "error",
         "unicode-bom": "error",
@@ -218,7 +218,7 @@ export async function javascript(
         ],
         "use-isnan": "error",
         "valid-typeof": ["error", { requireStringLiterals: true }],
-        "yoda": "error",
+        yoda: "error",
 
         ...overrides,
       },

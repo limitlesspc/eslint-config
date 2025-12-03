@@ -1,6 +1,18 @@
+import type { Linter } from "eslint";
+import type { RuleOptions } from "./typegen";
+import type {
+  Awaitable,
+  ConfigNames,
+  OptionsConfig,
+  TypedFlatConfigItem,
+} from "./types";
+
+import { FlatConfigComposer } from "eslint-flat-config-utils";
+import { isPackageExists } from "local-pkg";
 import {
   command,
   comments,
+  disables,
   ignores,
   imports,
   javascript,
@@ -14,20 +26,9 @@ import {
   svelte,
   typescript,
   unicorn,
-  disables,
 } from "./configs";
 import { regexp } from "./configs/regexp";
-import type { RuleOptions } from "./typegen";
-import type {
-  Awaitable,
-  ConfigNames,
-  OptionsConfig,
-  TypedFlatConfigItem,
-} from "./types";
 import { interopDefault } from "./utils";
-import type { Linter } from "eslint";
-import { FlatConfigComposer } from "eslint-flat-config-utils";
-import { isPackageExists } from "local-pkg";
 
 const flatConfigProps = [
   "name",
@@ -41,36 +42,40 @@ const flatConfigProps = [
 
 export const defaultPluginRenaming = {
   "@typescript-eslint": "ts",
-  "import-x": "import",
-  "n": "node",
+  "import-lite": "import",
+  n: "node",
 };
 
 /**
  * Construct an array of ESLint flat config items.
- * @param options - The options for generating the ESLint configurations.
- * @param userConfigs - The user configurations to be merged with the generated configurations.
- * @returns
- * The merged ESLint configurations.
+ *
+ * @param {OptionsConfig & TypedFlatConfigItem} options
+ *  The options for generating the ESLint configurations.
+ * @param {Awaitable<TypedFlatConfigItem | TypedFlatConfigItem[]>[]} userConfigs
+ *  The user configurations to be merged with the generated configurations.
+ * @returns {Promise<TypedFlatConfigItem[]>}
+ *  The merged ESLint configurations.
  */
 export function limitlesspc(
-  options: OptionsConfig & TypedFlatConfigItem = {},
-  ...userConfigs: Array<
-    Awaitable<
-      | TypedFlatConfigItem
-      | TypedFlatConfigItem[]
-      | FlatConfigComposer<any, any>
-      | Linter.Config[]
-    >
-  >
+  options: OptionsConfig & Omit<TypedFlatConfigItem, "files" | "ignores"> = {},
+  ...userConfigs: Awaitable<
+    | TypedFlatConfigItem
+    | TypedFlatConfigItem[]
+    | FlatConfigComposer<any, any>
+    | Linter.Config[]
+  >[]
 ): FlatConfigComposer<TypedFlatConfigItem, ConfigNames> {
   const {
     autoRenamePlugins = true,
     componentExts = [],
     gitignore: enableGitignore = true,
+    ignores: userIgnores = [],
+    imports: enableImports = true,
     jsx: enableJsx = true,
     regexp: enableRegexp = true,
     svelte: enableSvelte = false,
     typescript: enableTypeScript = isPackageExists("typescript"),
+    unicorn: enableUnicorn = true,
   } = options;
 
   const configs: Array<Awaitable<TypedFlatConfigItem[]>> = [];
@@ -78,18 +83,18 @@ export function limitlesspc(
   if (enableGitignore) {
     if (typeof enableGitignore !== "boolean") {
       configs.push(
-        interopDefault(import("eslint-config-flat-gitignore")).then(r => [
+        interopDefault(import("eslint-config-flat-gitignore")).then((r) => [
           r({
-            name: "limitlesspc/gitignore",
+            name: "antfu/gitignore",
             ...enableGitignore,
           }),
         ]),
       );
     } else {
       configs.push(
-        interopDefault(import("eslint-config-flat-gitignore")).then(r => [
+        interopDefault(import("eslint-config-flat-gitignore")).then((r) => [
           r({
-            name: "limitlesspc/gitignore",
+            name: "antfu/gitignore",
             strict: false,
           }),
         ]),
@@ -98,20 +103,34 @@ export function limitlesspc(
   }
 
   const typescriptOptions = resolveSubOptions(options, "typescript");
+  const tsconfigPath =
+    "tsconfigPath" in typescriptOptions
+      ? typescriptOptions.tsconfigPath
+      : undefined;
 
   configs.push(
     ignores(options.ignores),
     javascript({
       overrides: getOverrides(options, "javascript"),
     }),
-    unicorn(),
     comments(),
     node(),
     jsdoc(),
-    imports(),
     command(),
     perfectionist(),
   );
+
+  if (enableImports) {
+    configs.push(imports(enableImports === true ? {} : enableImports));
+  }
+
+  if (enableUnicorn) {
+    configs.push(unicorn(enableUnicorn === true ? {} : enableUnicorn));
+  }
+
+  if (enableJsx) {
+    configs.push(jsx(enableJsx === true ? {} : enableJsx));
+  }
 
   if (enableTypeScript) {
     configs.push(
@@ -121,10 +140,6 @@ export function limitlesspc(
         overrides: getOverrides(options, "typescript"),
       }),
     );
-  }
-
-  if (enableJsx) {
-    configs.push(jsx());
   }
 
   if (enableRegexp) {
@@ -151,6 +166,12 @@ export function limitlesspc(
   }
 
   configs.push(disables());
+
+  if ("files" in options) {
+    throw new Error(
+      '[@limitlesspc/eslint-config] The first argument should not contain the "files" property as the options are supposed to be global. Place it in the second or later config instead.',
+    );
+  }
 
   // User can optionally pass a flat config item to the first argument
   // We pick the known keys as ESLint would do schema validation
