@@ -1,9 +1,9 @@
 import type { TypedFlatConfigItem } from "../types";
 
 /**
- * Sort package.json.
+ * Sort package.json
  *
- * Requires `jsonc` config.
+ * Requires `jsonc` config
  */
 export async function sortPackageJson(): Promise<TypedFlatConfigItem[]> {
   return [
@@ -40,6 +40,7 @@ export async function sortPackageJson(): Promise<TypedFlatConfigItem[]> {
               "keywords",
               "categories",
               "sideEffects",
+              "imports",
               "exports",
               "main",
               "module",
@@ -79,12 +80,20 @@ export async function sortPackageJson(): Promise<TypedFlatConfigItem[]> {
             pathPattern: "^(?:resolutions|overrides|pnpm.overrides)$",
           },
           {
+            order: { type: "asc" },
+            pathPattern: "^workspaces\\.catalog$",
+          },
+          {
+            order: { type: "asc" },
+            pathPattern: "^workspaces\\.catalogs\\.[^.]+$",
+          },
+          {
             order: ["types", "import", "require", "default"],
             pathPattern: "^exports.*$",
           },
           {
             order: [
-              // Client hooks only
+              // client hooks only
               "pre-commit",
               "prepare-commit-msg",
               "commit-msg",
@@ -104,15 +113,15 @@ export async function sortPackageJson(): Promise<TypedFlatConfigItem[]> {
   ];
 }
 /**
- * Sort tsconfig.json.
+ * Sort tsconfig.json
  *
- * Requires `jsonc` config.
+ * Requires `jsonc` config
  */
 
 export function sortTsconfig(): TypedFlatConfigItem[] {
   return [
     {
-      files: ["**/tsconfig.json", "**/tsconfig.*.json"],
+      files: ["**/[jt]sconfig.json", "**/[jt]sconfig.*.json"],
       name: "limitlesspc/sort/tsconfig-json",
       rules: {
         "jsonc/sort-keys": [
@@ -150,6 +159,7 @@ export function sortTsconfig(): TypedFlatConfigItem[] {
               "useDefineForClassFields",
               "emitDecoratorMetadata",
               "experimentalDecorators",
+              "libReplacement",
               /* Modules */
               "baseUrl",
               "rootDir",
@@ -224,6 +234,7 @@ export function sortTsconfig(): TypedFlatConfigItem[] {
               "isolatedModules",
               "preserveSymlinks",
               "verbatimModuleSyntax",
+              "erasableSyntaxOnly",
               /* Completeness */
               "skipDefaultLibCheck",
               "skipLibCheck",

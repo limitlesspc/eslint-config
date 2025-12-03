@@ -4,7 +4,7 @@ import createCommand from "eslint-plugin-command/config";
 export async function command(): Promise<TypedFlatConfigItem[]> {
   return [
     {
-      ...createCommand(),
+      ...(createCommand() as any),
       name: "limitlesspc/command/rules",
     },
   ];

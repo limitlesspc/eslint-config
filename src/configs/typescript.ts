@@ -1,4 +1,5 @@
 /* eslint-disable perfectionist/sort-objects */
+import type { Linter } from "eslint";
 import { GLOB_TS, GLOB_TSX } from "../globs";
 import { pluginAntfu } from "../plugins";
 import type {
@@ -6,6 +7,7 @@ import type {
   OptionsFiles,
   OptionsOverrides,
   OptionsProjectType,
+  OptionsTypeScriptErasableOnly,
   OptionsTypeScriptParserOptions,
   OptionsTypeScriptWithTypes,
   TypedFlatConfigItem,
@@ -19,10 +21,12 @@ export async function typescript(
     OptionsOverrides &
     OptionsTypeScriptWithTypes &
     OptionsTypeScriptParserOptions &
-    OptionsProjectType = {},
+    OptionsProjectType &
+    OptionsTypeScriptErasableOnly = {},
 ): Promise<TypedFlatConfigItem[]> {
   const {
     componentExts = [],
+    erasableOnly = false,
     overrides = {},
     overridesTypeAware = {},
     parserOptions = {},
@@ -32,7 +36,7 @@ export async function typescript(
   const files = options.files ?? [
     GLOB_TS,
     GLOB_TSX,
-    ...componentExts.map(ext => `**/*.${ext}`),
+    ...componentExts.map((ext) => `**/*.${ext}`),
   ];
 
   const filesTypeAware = options.filesTypeAware ?? [GLOB_TS, GLOB_TSX];
@@ -77,17 +81,17 @@ export async function typescript(
       languageOptions: {
         parser: parserTs,
         parserOptions: {
-          extraFileExtensions: componentExts.map(ext => `.${ext}`),
+          extraFileExtensions: componentExts.map((ext) => `.${ext}`),
           sourceType: "module",
-          ...(typeAware ?
-            {
-              projectService: {
-                allowDefaultProject: ["./*.js"],
-                defaultProject: tsconfigPath,
-              },
-              tsconfigRootDir: process.cwd(),
-            }
-          : {}),
+          ...(typeAware
+            ? {
+                projectService: {
+                  allowDefaultProject: ["./*.js"],
+                  defaultProject: tsconfigPath,
+                },
+                tsconfigRootDir: process.cwd(),
+              }
+            : {}),
           ...(parserOptions as any),
         },
       },
@@ -105,12 +109,12 @@ export async function typescript(
       },
     },
     // Assign type-aware parser for type-aware files and type-unaware parser for the rest
-    ...(isTypeAware ?
-      [
-        makeParser(true, filesTypeAware, ignoresTypeAware),
-        makeParser(false, files, filesTypeAware),
-      ]
-    : [makeParser(false, files)]),
+    ...(isTypeAware
+      ? [
+          makeParser(true, filesTypeAware, ignoresTypeAware),
+          makeParser(false, files, filesTypeAware),
+        ]
+      : [makeParser(false, files)]),
     {
       files,
       name: "limitlesspc/typescript/rules",
@@ -181,33 +185,51 @@ export async function typescript(
         "no-unsafe-negation": "off",
         "no-invalid-this": "off",
 
-        ...(type === "lib" ?
-          {
-            "ts/explicit-function-return-type": [
-              "error",
-              {
-                allowExpressions: true,
-                allowHigherOrderFunctions: true,
-                allowIIFEs: true,
-              },
-            ],
-          }
-        : {}),
+        ...(type === "lib"
+          ? {
+              "ts/explicit-function-return-type": [
+                "error",
+                {
+                  allowExpressions: true,
+                  allowHigherOrderFunctions: true,
+                  allowIIFEs: true,
+                },
+              ],
+            }
+          : {}),
         ...overrides,
       },
     },
-    ...(isTypeAware ?
-      [
-        {
-          files: filesTypeAware,
-          ignores: ignoresTypeAware,
-          name: "antfu/typescript/rules-type-aware",
-          rules: {
-            ...typeAwareRules,
-            ...overridesTypeAware,
+    ...(isTypeAware
+      ? [
+          {
+            files: filesTypeAware,
+            ignores: ignoresTypeAware,
+            name: "antfu/typescript/rules-type-aware",
+            rules: {
+              ...typeAwareRules,
+              ...overridesTypeAware,
+            },
           },
-        },
-      ]
-    : []),
+        ]
+      : []),
+    ...(erasableOnly
+      ? [
+          {
+            name: "antfu/typescript/erasable-syntax-only",
+            plugins: {
+              "erasable-syntax-only": await interopDefault(
+                import("eslint-plugin-erasable-syntax-only"),
+              ),
+            },
+            rules: {
+              "erasable-syntax-only/enums": "error",
+              "erasable-syntax-only/import-aliases": "error",
+              "erasable-syntax-only/namespaces": "error",
+              "erasable-syntax-only/parameter-properties": "error",
+            } as Record<string, Linter.RuleEntry>,
+          },
+        ]
+      : []),
   ];
 }
