@@ -1,7 +1,10 @@
 import { pluginUnicorn } from "../plugins";
-import type { TypedFlatConfigItem } from "../types";
+import type { OptionsUnicorn, TypedFlatConfigItem } from "../types";
 
-export async function unicorn(): Promise<TypedFlatConfigItem[]> {
+export async function unicorn(
+  options: OptionsUnicorn = {},
+): Promise<TypedFlatConfigItem[]> {
+  const { overrides = {} } = options;
   return [
     {
       name: "limitlesspc/unicorn/rules",
@@ -108,6 +111,7 @@ export async function unicorn(): Promise<TypedFlatConfigItem[]> {
         "unicorn/template-indent": "error",
         "unicorn/text-encoding-identifier-case": "error",
         "unicorn/throw-new-error": "error",
+        ...overrides,
       },
     },
   ];

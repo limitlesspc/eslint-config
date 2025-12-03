@@ -133,8 +133,7 @@ export interface OptionsRegExp {
 }
 
 export interface OptionsConfig
-  extends OptionsComponentExts,
-    OptionsProjectType {
+  extends OptionsComponentExts, OptionsProjectType {
   /**
    * Enable gitignore support.
    *

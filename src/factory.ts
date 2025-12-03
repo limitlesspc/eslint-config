@@ -10,7 +10,6 @@ import type {
 import { FlatConfigComposer } from "eslint-flat-config-utils";
 import { isPackageExists } from "local-pkg";
 import {
-  command,
   comments,
   disables,
   ignores,
@@ -43,7 +42,7 @@ const flatConfigProps = [
 export const defaultPluginRenaming = {
   "@typescript-eslint": "ts",
   "import-lite": "import",
-  n: "node",
+  "n": "node",
 };
 
 /**
@@ -83,7 +82,7 @@ export function limitlesspc(
   if (enableGitignore) {
     if (typeof enableGitignore !== "boolean") {
       configs.push(
-        interopDefault(import("eslint-config-flat-gitignore")).then((r) => [
+        interopDefault(import("eslint-config-flat-gitignore")).then(r => [
           r({
             name: "antfu/gitignore",
             ...enableGitignore,
@@ -92,7 +91,7 @@ export function limitlesspc(
       );
     } else {
       configs.push(
-        interopDefault(import("eslint-config-flat-gitignore")).then((r) => [
+        interopDefault(import("eslint-config-flat-gitignore")).then(r => [
           r({
             name: "antfu/gitignore",
             strict: false,
@@ -103,10 +102,6 @@ export function limitlesspc(
   }
 
   const typescriptOptions = resolveSubOptions(options, "typescript");
-  const tsconfigPath =
-    "tsconfigPath" in typescriptOptions
-      ? typescriptOptions.tsconfigPath
-      : undefined;
 
   configs.push(
     ignores(options.ignores),
@@ -116,7 +111,6 @@ export function limitlesspc(
     comments(),
     node(),
     jsdoc(),
-    command(),
     perfectionist(),
   );
 
@@ -129,7 +123,7 @@ export function limitlesspc(
   }
 
   if (enableJsx) {
-    configs.push(jsx(enableJsx === true ? {} : enableJsx));
+    configs.push(jsx());
   }
 
   if (enableTypeScript) {
