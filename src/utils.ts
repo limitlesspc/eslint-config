@@ -87,7 +87,7 @@ export function renamePluginInConfigs(
   configs: TypedFlatConfigItem[],
   map: Record<string, string>,
 ): TypedFlatConfigItem[] {
-  return configs.map((i) => {
+  return configs.map(i => {
     const clone = { ...i };
     clone.rules &&= renameRules(clone.rules, map);
     clone.plugins &&= Object.fromEntries(
@@ -129,7 +129,7 @@ export async function ensurePackages(
   }
 
   const nonExistingPackages = packages.filter(
-    (i) => i && !isPackageInScope(i),
+    i => i && !isPackageInScope(i),
   ) as string[];
   if (nonExistingPackages.length === 0) {
     return;
@@ -140,7 +140,7 @@ export async function ensurePackages(
     message: `${nonExistingPackages.length === 1 ? "Package is" : "Packages are"} required for this config: ${nonExistingPackages.join(", ")}. Do you want to install them?`,
   });
   if (result) {
-    await import("@antfu/install-pkg").then((i) =>
+    await import("@antfu/install-pkg").then(i =>
       i.installPackage(nonExistingPackages, { dev: true }),
     );
   }

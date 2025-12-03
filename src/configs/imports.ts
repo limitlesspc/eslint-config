@@ -18,7 +18,7 @@ export async function imports(
         "antfu/no-import-dist": "error",
         "antfu/no-import-node-modules-by-path": "error",
 
-        "import-x/no-useless-path-segments": ["warn", { noUselessIndex: true }],
+        "import/no-useless-path-segments": ["warn", { noUselessIndex: true }],
         "import/default": "error",
         "import/export": "error",
         "import/first": "error",
