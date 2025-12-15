@@ -70,7 +70,9 @@ export function limitlesspc(
     gitignore: enableGitignore = true,
     ignores: userIgnores = [],
     imports: enableImports = true,
+    jsdoc: enableJsdoc = true,
     jsx: enableJsx = true,
+    node: enableNode = true,
     regexp: enableRegexp = true,
     svelte: enableSvelte = false,
     typescript: enableTypeScript = isPackageExists("typescript"),
@@ -84,7 +86,7 @@ export function limitlesspc(
       configs.push(
         interopDefault(import("eslint-config-flat-gitignore")).then(r => [
           r({
-            name: "antfu/gitignore",
+            name: "limitlesspc/gitignore",
             ...enableGitignore,
           }),
         ]),
@@ -93,7 +95,7 @@ export function limitlesspc(
       configs.push(
         interopDefault(import("eslint-config-flat-gitignore")).then(r => [
           r({
-            name: "antfu/gitignore",
+            name: "limitlesspc/gitignore",
             strict: false,
           }),
         ]),
@@ -104,18 +106,24 @@ export function limitlesspc(
   const typescriptOptions = resolveSubOptions(options, "typescript");
 
   configs.push(
-    ignores(options.ignores),
+    ignores(userIgnores),
     javascript({
       overrides: getOverrides(options, "javascript"),
     }),
     comments(),
-    node(),
-    jsdoc(),
     perfectionist(),
   );
 
+  if (enableNode) {
+    configs.push(node());
+  }
+
+  if (enableJsdoc) {
+    configs.push(jsdoc());
+  }
+
   if (enableImports) {
-    configs.push(imports(enableImports === true ? {} : enableImports));
+    configs.push(imports(resolveSubOptions(options, "imports")));
   }
 
   if (enableUnicorn) {

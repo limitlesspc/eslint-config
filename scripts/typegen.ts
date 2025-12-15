@@ -2,20 +2,10 @@ import fs from "node:fs/promises";
 
 import { flatConfigsToRulesDTS } from "eslint-typegen/core";
 import { builtinRules } from "eslint/use-at-your-own-risk";
+import { CONFIG_PRESET_FULL_ON } from "src/config-presets";
 import { limitlesspc } from "../src/factory";
 
-const configs = await limitlesspc({
-  imports: true,
-  jsonc: true,
-  regexp: true,
-  gitignore: true,
-  svelte: true,
-  typescript: {
-    tsconfigPath: "tsconfig.json",
-    erasableOnly: true,
-  },
-  unicorn: true,
-}).prepend({
+const configs = await limitlesspc(CONFIG_PRESET_FULL_ON).prepend({
   plugins: {
     "": {
       rules: Object.fromEntries(builtinRules.entries()),

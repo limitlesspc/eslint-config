@@ -160,6 +160,20 @@ export interface OptionsConfig
   javascript?: OptionsOverrides;
 
   /**
+   * Enable Node.js rules
+   *
+   * @default true
+   */
+  node?: boolean;
+
+  /**
+   * Enable JSDoc rules
+   *
+   * @default true
+   */
+  jsdoc?: boolean;
+
+  /**
    * Enable TypeScript support.
    *
    * Passing an object to enable TypeScript Language Server support.

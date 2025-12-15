@@ -1,6 +1,6 @@
-import { antfu } from "./src";
+import { limitlesspc } from "./src";
 
-export default antfu(
+export default limitlesspc(
   {
     vue: {
       a11y: true,

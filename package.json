@@ -2,17 +2,19 @@
   "name": "@limitlesspc/eslint-config",
   "type": "module",
   "version": "0.16.2",
-  "packageManager": "pnpm@10.24.0",
+  "packageManager": "pnpm@10.25.0",
   "description": "ESLint config",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist/index.mjs",
+    "./package.json": "./package.json"
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "files": [
     "dist"
   ],
@@ -86,6 +88,10 @@
     "typescript": "catalog:dev"
   },
   "resolutions": {
-    "eslint": "catalog:peer"
+    "@eslint-community/eslint-utils": "catalog:peer",
+    "@typescript-eslint/types": "catalog:peer",
+    "@typescript-eslint/utils": "catalog:peer",
+    "eslint": "catalog:peer",
+    "tsx": "catalog:dev"
   }
 }
