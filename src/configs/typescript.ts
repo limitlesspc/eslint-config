@@ -45,8 +45,10 @@ export async function typescript(
   const isTypeAware = !!tsconfigPath;
 
   const typeAwareRules: TypedFlatConfigItem["rules"] = {
+    "ts/no-redundant-type-constituents": "error",
     "dot-notation": "off",
     "no-implied-eval": "off",
+    "no-throw-literal": "off", // use by ts/only-throw-error
     "ts/await-thenable": "error",
     "ts/dot-notation": ["error", { allowKeywords: true }],
     "ts/no-floating-promises": "error",
@@ -54,11 +56,13 @@ export async function typescript(
     "ts/no-implied-eval": "error",
     "ts/no-misused-promises": "error",
     "ts/no-unnecessary-type-assertion": "error",
+    "ts/no-unnecessary-type-conversion": "error",
     "ts/no-unsafe-argument": "error",
     "ts/no-unsafe-assignment": "error",
     "ts/no-unsafe-call": "error",
     "ts/no-unsafe-member-access": "error",
     "ts/no-unsafe-return": "error",
+    "ts/only-throw-error": "error",
     "ts/promise-function-async": "error",
     "ts/restrict-plus-operands": "error",
     "ts/restrict-template-expressions": "error",
@@ -127,10 +131,9 @@ export async function typescript(
           "@typescript-eslint": "ts",
         }),
 
+        "no-unused-private-class-members": "off", // use ts/no-unused-private-class-members
         "antfu/no-ts-export-equal": "error",
         "default-param-last": "off",
-        "import/default": "off", // Doesn't work with TypeScript
-        "import/export": "error", // Doesn't work with TypeScript
         "no-unused-expressions": "off",
         "no-use-before-define": "off",
         "no-useless-constructor": "off",
@@ -140,10 +143,11 @@ export async function typescript(
           { "ts-expect-error": "allow-with-description" },
         ],
         "ts/consistent-type-definitions": ["error", "interface"],
+        "ts/consistent-type-imports": ["error", { prefer: "type-imports" }],
         "ts/default-param-last": "error",
         "ts/method-signature-style": ["error", "property"], // https://www.totaltypescript.com/method-shorthand-syntax-considered-harmful
         "ts/no-dupe-class-members": "error",
-        "ts/no-explicit-any": "off",
+        "ts/no-explicit-any": "error",
         "ts/no-invalid-void-type": "off",
         "ts/no-non-null-assertion": "off",
         "ts/no-redeclare": "error",
@@ -156,17 +160,15 @@ export async function typescript(
           { classes: false, functions: false, variables: true },
         ],
         "ts/no-useless-empty-export": "error",
-        "ts/prefer-nullish-coalescing": "off",
+        "ts/prefer-nullish-coalescing": "error",
         "ts/unified-signatures": [
           "error",
-          { ignoreDifferentlyNamedParameters: true },
-        ],
-        "ts/consistent-type-imports": [
-          "error",
           {
-            prefer: "type-imports",
+            ignoreDifferentlyNamedParameters: true,
+            ignoreOverloadsWithDifferentJSDoc: true,
           },
         ],
+        "ts/no-unused-private-class-members": "error",
 
         // TypeScript handles these by itself
         "constructor-super": "off",
