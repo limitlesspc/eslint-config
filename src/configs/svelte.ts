@@ -81,7 +81,6 @@ export async function svelte(
         "svelte/no-dupe-on-directives": "error",
         "svelte/no-dupe-style-properties": "error",
         "svelte/no-dupe-use-directives": "error",
-        "svelte/no-dynamic-slot-name": "error",
         "svelte/no-export-load-in-svelte-module-in-kit-pages": "error",
         "svelte/no-extra-reactive-curlies": "warn",
         "svelte/no-ignored-unsubscribe": "error",
