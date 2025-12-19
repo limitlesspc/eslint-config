@@ -109,7 +109,6 @@ export async function unicorn(
         "unicorn/prefer-set-size": "error",
         "unicorn/prefer-single-call": "error",
         "unicorn/prefer-spread": "error",
-        "unicorn/prefer-string-raw": "error",
         "unicorn/prefer-string-replace-all": "error",
         "unicorn/prefer-string-slice": "error",
         "unicorn/prefer-string-starts-ends-with": "error",
