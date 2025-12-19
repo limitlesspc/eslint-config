@@ -134,6 +134,7 @@ export async function javascript(
         "no-template-curly-in-string": "error",
         "no-this-before-super": "error",
         "no-throw-literal": "error",
+        "no-unassigned-vars": "error",
         "no-undef": "error",
         "no-undef-init": "error",
         "no-underscore-dangle": "error",
@@ -177,20 +178,14 @@ export async function javascript(
         "object-shorthand": [
           "error",
           "always",
-          {
-            avoidQuotes: true,
-            ignoreConstructors: false,
-          },
+          { avoidQuotes: true, ignoreConstructors: false },
         ],
         "one-var": ["error", { initialized: "never" }],
         "operator-assignment": "error",
         "prefer-arrow-callback": "error",
         "prefer-const": [
           "error",
-          {
-            destructuring: "all",
-            ignoreReadBeforeAssign: true,
-          },
+          { destructuring: "all", ignoreReadBeforeAssign: true },
         ],
         "prefer-destructuring": ["error", { array: false, object: true }],
         "prefer-exponentiation-operator": "error",
