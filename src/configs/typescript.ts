@@ -160,7 +160,6 @@ export async function typescript(
           { classes: false, functions: false, variables: true },
         ],
         "ts/no-useless-empty-export": "error",
-        "ts/prefer-nullish-coalescing": "error",
         "ts/unified-signatures": [
           "error",
           {
