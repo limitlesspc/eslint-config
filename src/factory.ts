@@ -1,14 +1,3 @@
-import type { Linter } from "eslint";
-import type { RuleOptions } from "./typegen";
-import type {
-  Awaitable,
-  ConfigNames,
-  OptionsConfig,
-  TypedFlatConfigItem,
-} from "./types";
-
-import { FlatConfigComposer } from "eslint-flat-config-utils";
-import { isPackageExists } from "local-pkg";
 import {
   comments,
   disables,
@@ -27,7 +16,17 @@ import {
   unicorn,
 } from "./configs";
 import { regexp } from "./configs/regexp";
+import type { RuleOptions } from "./typegen";
+import type {
+  Awaitable,
+  ConfigNames,
+  OptionsConfig,
+  TypedFlatConfigItem,
+} from "./types";
 import { interopDefault } from "./utils";
+import type { Linter } from "eslint";
+import { FlatConfigComposer } from "eslint-flat-config-utils";
+import { isPackageExists } from "local-pkg";
 
 const flatConfigProps = [
   "name",
@@ -57,12 +56,14 @@ export const defaultPluginRenaming = {
  */
 export function limitlesspc(
   options: OptionsConfig & Omit<TypedFlatConfigItem, "files" | "ignores"> = {},
-  ...userConfigs: Awaitable<
-    | TypedFlatConfigItem
-    | TypedFlatConfigItem[]
-    | FlatConfigComposer<any, any>
-    | Linter.Config[]
-  >[]
+  ...userConfigs: Array<
+    Awaitable<
+      | TypedFlatConfigItem
+      | TypedFlatConfigItem[]
+      | FlatConfigComposer<any, any>
+      | Linter.Config[]
+    >
+  >
 ): FlatConfigComposer<TypedFlatConfigItem, ConfigNames> {
   const {
     autoRenamePlugins = true,

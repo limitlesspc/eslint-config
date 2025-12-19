@@ -1,5 +1,4 @@
 /* eslint-disable perfectionist/sort-objects */
-import type { Linter } from "eslint";
 import { GLOB_TS, GLOB_TSX } from "../globs";
 import { pluginAntfu } from "../plugins";
 import type {
@@ -13,6 +12,7 @@ import type {
   TypedFlatConfigItem,
 } from "../types";
 import { interopDefault, renameRules } from "../utils";
+import type { Linter } from "eslint";
 import process from "node:process";
 
 export async function typescript(

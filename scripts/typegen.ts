@@ -1,9 +1,8 @@
-import fs from "node:fs/promises";
-
+import { limitlesspc } from "../src/factory";
 import { flatConfigsToRulesDTS } from "eslint-typegen/core";
 import { builtinRules } from "eslint/use-at-your-own-risk";
+import fs from "node:fs/promises";
 import { CONFIG_PRESET_FULL_ON } from "src/config-presets";
-import { limitlesspc } from "../src/factory";
 
 const configs = await limitlesspc(CONFIG_PRESET_FULL_ON).prepend({
   plugins: {

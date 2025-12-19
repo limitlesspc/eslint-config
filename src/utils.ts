@@ -1,9 +1,8 @@
 import type { Awaitable, TypedFlatConfigItem } from "./types";
 import { isPackageExists } from "local-pkg";
 import process from "node:process";
-import { fileURLToPath } from "node:url";
 
-const scopeUrl = fileURLToPath(new URL(".", import.meta.url));
+const scopeUrl = import.meta.dirname;
 const isCwdInScope = isPackageExists("@limitlesspc/eslint-config");
 
 export const parserPlain = {
@@ -31,7 +30,7 @@ export const parserPlain = {
  * Combine array and non-array configs into a single array.
  */
 export async function combine(
-  ...configs: Awaitable<TypedFlatConfigItem | TypedFlatConfigItem[]>[]
+  ...configs: Array<Awaitable<TypedFlatConfigItem | TypedFlatConfigItem[]>>
 ): Promise<TypedFlatConfigItem[]> {
   const resolved = await Promise.all(configs);
   return resolved.flat();
@@ -62,8 +61,9 @@ export function renameRules(
   return Object.fromEntries(
     Object.entries(rules).map(([key, value]) => {
       for (const [from, to] of Object.entries(map)) {
-        if (key.startsWith(`${from}/`))
+        if (key.startsWith(`${from}/`)) {
           return [to + key.slice(from.length), value];
+        }
       }
       return [key, value];
     }),
