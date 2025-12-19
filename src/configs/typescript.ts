@@ -147,6 +147,7 @@ export async function typescript(
         "ts/default-param-last": "error",
         "ts/method-signature-style": ["error", "property"], // https://www.totaltypescript.com/method-shorthand-syntax-considered-harmful
         "ts/no-dupe-class-members": "error",
+        "ts/no-explicit-any": "off",
         "ts/no-invalid-void-type": "off",
         "ts/no-non-null-assertion": "off",
         "ts/no-redeclare": "error",
