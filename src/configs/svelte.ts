@@ -69,9 +69,7 @@ export async function svelte(
         ],
         "svelte/comment-directive": [
           "error",
-          {
-            reportUnusedDisableDirectives: true,
-          },
+          { reportUnusedDisableDirectives: true },
         ],
         "svelte/derived-has-same-inputs-outputs": "error",
         "svelte/html-self-closing": ["warn", "all"],

@@ -5,8 +5,8 @@ import type { FlatGitignoreOptions } from "eslint-config-flat-gitignore";
 
 export type Awaitable<T> = T | Promise<T>;
 
-export type Rules = Record<string, Linter.RuleEntry<any> | undefined> &
-  RuleOptions;
+export type Rules = Record<string, Linter.RuleEntry<any> | undefined>
+  & RuleOptions;
 
 // eslint-disable-next-line unicorn/prefer-export-from
 export type { ConfigNames };
@@ -40,12 +40,12 @@ export interface OptionsFiles {
 }
 
 export type OptionsTypescript =
-  | (OptionsTypeScriptWithTypes &
-      OptionsOverrides &
-      OptionsTypeScriptErasableOnly)
-  | (OptionsTypeScriptParserOptions &
-      OptionsOverrides &
-      OptionsTypeScriptErasableOnly);
+  | (OptionsTypeScriptWithTypes
+      & OptionsOverrides
+      & OptionsTypeScriptErasableOnly)
+  | (OptionsTypeScriptParserOptions
+      & OptionsOverrides
+      & OptionsTypeScriptErasableOnly);
 
 export interface OptionsComponentExts {
   /**

@@ -16,13 +16,13 @@ import { interopDefault, renameRules } from "../utils";
 import process from "node:process";
 
 export async function typescript(
-  options: OptionsFiles &
-    OptionsComponentExts &
-    OptionsOverrides &
-    OptionsTypeScriptWithTypes &
-    OptionsTypeScriptParserOptions &
-    OptionsProjectType &
-    OptionsTypeScriptErasableOnly = {},
+  options: OptionsFiles
+    & OptionsComponentExts
+    & OptionsOverrides
+    & OptionsTypeScriptWithTypes
+    & OptionsTypeScriptParserOptions
+    & OptionsProjectType
+    & OptionsTypeScriptErasableOnly = {},
 ): Promise<TypedFlatConfigItem[]> {
   const {
     componentExts = [],

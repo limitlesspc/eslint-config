@@ -73,7 +73,7 @@
     "@antfu/ni": "catalog:dev",
     "@eslint/config-inspector": "catalog:dev",
     "@limitlesspc/eslint-config": "workspace:*",
-    "@limitlesspc/prettier-config": "^1.1.1",
+    "@limitlesspc/prettier-config": "^1.2.1",
     "@types/node": "catalog:dev",
     "bumpp": "catalog:dev",
     "eslint": "catalog:peer",

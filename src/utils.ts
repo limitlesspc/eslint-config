@@ -121,9 +121,9 @@ export async function ensurePackages(
   packages: Array<string | undefined>,
 ): Promise<void> {
   if (
-    process.env.CI ||
-    process.stdout.isTTY === false ||
-    isCwdInScope === false
+    process.env.CI
+    || process.stdout.isTTY === false
+    || isCwdInScope === false
   ) {
     return;
   }
