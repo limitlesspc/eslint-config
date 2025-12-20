@@ -29,6 +29,8 @@ export async function unicorn(
         "unicorn/no-accessor-recursion": "error",
         "unicorn/no-array-for-each": "error",
         "unicorn/no-array-method-this-argument": "error",
+        "unicorn/no-array-reverse": "error",
+        "unicorn/no-array-sort": "error",
         "unicorn/no-await-expression-member": "error",
         "unicorn/no-console-spaces": "error",
         "unicorn/no-document-cookie": "error",
