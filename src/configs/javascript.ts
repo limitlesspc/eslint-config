@@ -137,7 +137,6 @@ export async function javascript(
         "no-unassigned-vars": "error",
         "no-undef": "error",
         "no-undef-init": "error",
-        "no-underscore-dangle": "error",
         "no-unexpected-multiline": "error",
         "no-unmodified-loop-condition": "error",
         "no-unneeded-ternary": ["error", { defaultAssignment: false }],

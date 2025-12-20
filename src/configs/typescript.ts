@@ -45,7 +45,6 @@ export async function typescript(
   const isTypeAware = !!tsconfigPath;
 
   const typeAwareRules: TypedFlatConfigItem["rules"] = {
-    "ts/no-redundant-type-constituents": "error",
     "dot-notation": "off",
     "no-implied-eval": "off",
     "no-throw-literal": "off", // use by ts/only-throw-error
