@@ -43,11 +43,36 @@ export async function svelte(
       name: "limitlesspc/svelte/rules",
       processor: pluginSvelte.processors[".svelte"],
       rules: {
-        "import/no-mutable-exports": "off", // Svelte props are declared as mutable exports
+        "import/no-mutable-exports": "off", // Svelte props are declared as mutable exports using `let` (`export let prop;`)
+        /**
+         * Used to force a function to run when a variable changes in reactive `$:` statements
+         * @example ```js
+         * $: array && load(); // Calls load when the array is updated
+         * $: [selectedOptionIndex] && load(); // Calls load when an option is selected (even the
+         * first option, index 0)
+         * ```
+         */
+        "no-constant-binary-expression": "off",
         "no-inner-declarations": "off", // Svelte <script> tags are considered render() functions so being able to declare functions inside them is useful
         "no-nested-ternary": "off", // Often used to define a prop
+        /**
+         * Used to force a re-render for things like arrays in Svelte v4
+         * @example ```js
+         * let array = [1, 2];
+         * // some time later...
+         * array.push(3);
+         * array = array; // forces a re-render
+         * ```
+         */
+        "no-self-assign": "off",
         "no-undef": "off", // Incompatible with most recent (attribute-form) generic types RFC
-        "no-undef-init": "off", // Optional props can have a default value of undefined
+        /**
+         * Optional props can have a default value of undefined
+         * @example ```js
+         * export let prop: string | undefined = undefined; // need the '= undefined' here
+         * ```
+         */
+        "no-undef-init": "off",
         "no-unused-vars": [
           "error",
           {
@@ -61,7 +86,7 @@ export async function svelte(
         "svelte/block-lang": [
           "error",
           {
-            enforceScriptPresent: true,
+            enforceScriptPresent: false,
             enforceStylePresent: false,
             script: "ts",
             style: ["scss", null],
@@ -75,6 +100,7 @@ export async function svelte(
         "svelte/html-self-closing": ["warn", "all"],
         "svelte/infinite-reactive-loop": "error",
         "svelte/no-at-debug-tags": "warn",
+        "svelte/no-at-html-tags": "off", // If I use `@html` I know what I'm doing
         "svelte/no-dupe-else-if-blocks": "error",
         "svelte/no-dupe-on-directives": "error",
         "svelte/no-dupe-style-properties": "error",
@@ -108,9 +134,15 @@ export async function svelte(
         "svelte/system": "error",
         "svelte/valid-each-key": "error",
         "svelte/valid-prop-names-in-kit-pages": "error",
-        "unicorn/filename-case": "off", // Svelte components are usually PascalCase
-        "unicorn/no-useless-undefined": "off", // Optional props can have a default value of undefined
-        "unicorn/prefer-top-level-await": "off", // Can't use top-level await in Svelte
+        "unicorn/filename-case": "off", // Svelte components are usually PascalCase, but also sometimes things like `+page.svelte` in SvelteKit
+        /**
+         * Optional props can have a default value of undefined
+         * @example ```js
+         * export let prop: string | undefined = undefined; // need the '= undefined' here
+         * ```
+         */
+        "unicorn/no-useless-undefined": "off",
+        "unicorn/prefer-top-level-await": "off", // Can't use top-level await in Svelte (experimental in Svelte 5.36)
 
         "unused-imports/no-unused-vars": [
           "error",
