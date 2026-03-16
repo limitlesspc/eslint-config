@@ -66,7 +66,10 @@ export async function typescript(
     "ts/restrict-plus-operands": "error",
     "ts/restrict-template-expressions": "error",
     "ts/return-await": ["error", "in-try-catch"],
-    "ts/switch-exhaustiveness-check": "error",
+    "ts/switch-exhaustiveness-check": [
+      "error",
+      { considerDefaultExhaustiveForUnions: true },
+    ],
     "ts/unbound-method": "error",
   };
 
