@@ -2,28 +2,12 @@ import { limitlesspc } from "./src";
 
 export default limitlesspc(
   {
-    vue: {
-      a11y: true,
-    },
-    react: true,
-    solid: true,
     svelte: true,
-    astro: true,
-    nextjs: false,
     typescript: {
       erasableOnly: true,
     },
-    markdown: {
-      overrides: {
-        "no-dupe-keys": "off",
-      },
-    },
-    formatters: true,
-    pnpm: true,
     type: "lib",
-    jsx: {
-      a11y: true,
-    },
+    jsx: true,
   },
   {
     ignores: ["fixtures", "_fixtures", "**/constants-generated.ts"],
