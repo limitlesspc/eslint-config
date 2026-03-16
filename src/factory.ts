@@ -184,7 +184,7 @@ export function limitlesspc(
       fusedConfig[key] = options[key] as any;
     }
   }
-  if (Object.keys(fusedConfig).length) {
+  if (Object.keys(fusedConfig).length > 0) {
     configs.push([fusedConfig]);
   }
 
@@ -205,7 +205,9 @@ export function resolveSubOptions<K extends keyof OptionsConfig>(
   options: OptionsConfig,
   key: K,
 ): ResolvedOptions<OptionsConfig[K]> {
-  return typeof options[key] === "boolean" ? ({} as any) : options[key] || {};
+  return typeof options[key] === "boolean" ?
+      ({} as any)
+    : options[key] || ({} as any);
 }
 
 export function getOverrides<K extends keyof OptionsConfig>(
