@@ -24,29 +24,10 @@ export async function perfectionist(): Promise<TypedFlatConfigItem[]> {
           {
             customGroups: {
               value: {
-                svelte: [String.raw`\.svelte$`],
+                svelte: ["\\.svelte$"],
               },
             },
-            groups: [
-              "svelte",
-              [
-                "builtin",
-                "external",
-                "internal",
-                "parent",
-                "sibling",
-                "index",
-                "object",
-                "style",
-                "external-type",
-                "builtin-type",
-                "internal-type",
-                "parent-type",
-                "sibling-type",
-                "index-type",
-                "unknown",
-              ],
-            ],
+            groups: ["svelte", "import"],
             type: "natural",
           },
         ],
