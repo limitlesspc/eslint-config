@@ -47,7 +47,7 @@ export async function typescript(
   const typeAwareRules: TypedFlatConfigItem["rules"] = {
     "dot-notation": "off",
     "no-implied-eval": "off",
-    "no-throw-literal": "off", // use by ts/only-throw-error
+    "no-throw-literal": "off", // use ts/only-throw-error
     "ts/await-thenable": "error",
     "ts/dot-notation": ["error", { allowKeywords: true }],
     "ts/no-floating-promises": "error",
@@ -65,6 +65,12 @@ export async function typescript(
     "ts/promise-function-async": "error",
     "ts/restrict-plus-operands": "error",
     "ts/restrict-template-expressions": "error",
+    "ts/return-await": ["error", "in-try-catch"],
+    "ts/strict-boolean-expressions": [
+      "error",
+      { allowNullableBoolean: true, allowNullableObject: true },
+    ],
+    "ts/switch-exhaustiveness-check": "error",
     "ts/unbound-method": "error",
   };
 
@@ -130,10 +136,10 @@ export async function typescript(
           "@typescript-eslint": "ts",
         }),
 
-        "no-unused-private-class-members": "off", // use ts/no-unused-private-class-members
         "antfu/no-ts-export-equal": "error",
         "default-param-last": "off",
         "no-unused-expressions": "off",
+        "no-unused-private-class-members": "off", // use ts/no-unused-private-class-members
         "no-use-before-define": "off",
         "no-useless-constructor": "off",
         "ts/array-type": ["error", { default: "array-simple" }],
@@ -149,16 +155,19 @@ export async function typescript(
         "ts/no-explicit-any": "off",
         "ts/no-invalid-void-type": "off",
         "ts/no-non-null-assertion": "off",
-        "ts/no-redeclare": "error",
+        "ts/no-redeclare": ["error", { builtinGlobals: false }],
         "ts/no-require-imports": "error",
         "ts/no-unsafe-unary-minus": "error",
         "ts/no-unused-expressions": "error",
+        "ts/no-unused-private-class-members": "error",
         "ts/no-unused-vars": "off", // use unused-imports/no-unused-vars instead
         "ts/no-use-before-define": [
           "error",
           { classes: false, functions: false, variables: true },
         ],
         "ts/no-useless-empty-export": "error",
+        "ts/no-wrapper-object-types": "error",
+        "ts/triple-slash-reference": "off",
         "ts/unified-signatures": [
           "error",
           {
@@ -166,7 +175,6 @@ export async function typescript(
             ignoreOverloadsWithDifferentJSDoc: true,
           },
         ],
-        "ts/no-unused-private-class-members": "error",
 
         // TypeScript handles these by itself
         "constructor-super": "off",
@@ -205,7 +213,7 @@ export async function typescript(
         {
           files: filesTypeAware,
           ignores: ignoresTypeAware,
-          name: "antfu/typescript/rules-type-aware",
+          name: "limitlesspc/typescript/rules-type-aware",
           rules: {
             ...typeAwareRules,
             ...overridesTypeAware,
@@ -216,7 +224,7 @@ export async function typescript(
     ...(erasableOnly ?
       [
         {
-          name: "antfu/typescript/erasable-syntax-only",
+          name: "limitlesspc/typescript/erasable-syntax-only",
           plugins: {
             "erasable-syntax-only": await interopDefault(
               import("eslint-plugin-erasable-syntax-only"),
