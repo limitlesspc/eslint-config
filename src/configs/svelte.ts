@@ -34,9 +34,7 @@ export async function svelte(
           extraFileExtensions: [".svelte"],
           parser:
             options.typescript ?
-              ((await interopDefault(
-                import("@typescript-eslint/parser"),
-              )) as any)
+              await interopDefault(import("@typescript-eslint/parser"))
             : null,
         },
       },

@@ -13,6 +13,8 @@ export async function jsx(): Promise<TypedFlatConfigItem[]> {
         },
       },
       name: "limitlesspc/jsx/setup",
+      plugins: {},
+      rules: {},
     },
   ];
 }

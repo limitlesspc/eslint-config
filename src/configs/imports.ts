@@ -24,6 +24,7 @@ export async function imports(
         "import/no-duplicates": ["error", { "prefer-inline": true }],
         "import/no-mutable-exports": "error",
         "import/no-named-default": "error",
+
         "no-duplicate-imports": "off", // use import/no-duplicates
         "unicorn/no-named-default": "off", // use no-named-default
 

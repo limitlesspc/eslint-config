@@ -12,23 +12,18 @@ export async function jsonc(
   const { files = [GLOB_JSON, GLOB_JSON5, GLOB_JSONC], overrides = {} } =
     options;
 
-  const [pluginJsonc, parserJsonc] = await Promise.all([
-    interopDefault(import("eslint-plugin-jsonc")),
-    interopDefault(import("jsonc-eslint-parser")),
-  ] as const);
+  const pluginJsonc = await interopDefault(import("eslint-plugin-jsonc"));
 
   return [
     {
       name: "limitlesspc/jsonc/setup",
       plugins: {
-        jsonc: pluginJsonc as any,
+        jsonc: pluginJsonc,
       },
     },
     {
       files,
-      languageOptions: {
-        parser: parserJsonc,
-      },
+      language: "jsonc/x",
       name: "limitlesspc/jsonc/rules",
       rules: {
         "jsonc/no-bigint-literals": "error",

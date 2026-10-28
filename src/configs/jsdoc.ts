@@ -1,13 +1,18 @@
+import { GLOB_SRC } from "../globs";
 import type { TypedFlatConfigItem } from "../types";
 import { interopDefault } from "../utils";
 
 export async function jsdoc(): Promise<TypedFlatConfigItem[]> {
   return [
     {
-      name: "limitlesspc/jsdoc/rules",
+      name: "limitlesspc/jsdoc/setup",
       plugins: {
         jsdoc: await interopDefault(import("eslint-plugin-jsdoc")),
       },
+    },
+    {
+      files: [GLOB_SRC],
+      name: "limitlesspc/jsdoc/rules",
       rules: {
         "jsdoc/check-access": "warn",
         "jsdoc/check-alignment": "warn",

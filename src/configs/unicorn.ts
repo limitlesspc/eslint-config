@@ -1,3 +1,4 @@
+import { GLOB_SRC } from "../globs";
 import { pluginUnicorn } from "../plugins";
 import type { OptionsUnicorn, TypedFlatConfigItem } from "../types";
 
@@ -7,10 +8,14 @@ export async function unicorn(
   const { overrides = {} } = options;
   return [
     {
-      name: "limitlesspc/unicorn/rules",
+      name: "limitlesspc/unicorn/setup",
       plugins: {
         unicorn: pluginUnicorn,
       },
+    },
+    {
+      files: [GLOB_SRC],
+      name: "limitlesspc/unicorn/rules",
       rules: {
         "no-array-constructor": "off",
         "no-negated-condition": "off",
@@ -28,7 +33,6 @@ export async function unicorn(
         "unicorn/new-for-builtins": "error",
         "unicorn/no-abusive-eslint-disable": "error",
         "unicorn/no-accessor-recursion": "error",
-        "unicorn/no-array-for-each": "error",
         "unicorn/no-array-method-this-argument": "error",
         "unicorn/no-array-reverse": "error",
         "unicorn/no-array-sort": "error",
@@ -36,6 +40,7 @@ export async function unicorn(
         "unicorn/no-console-spaces": "error",
         "unicorn/no-document-cookie": "error",
         "unicorn/no-empty-file": "error",
+        "unicorn/no-for-each": "error",
         "unicorn/no-for-loop": "error",
         "unicorn/no-hex-escape": "error",
         "unicorn/no-instanceof-builtins": "error",

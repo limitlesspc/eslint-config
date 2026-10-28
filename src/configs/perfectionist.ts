@@ -1,11 +1,16 @@
 import { pluginPerfectionist } from "../plugins";
-import type { TypedFlatConfigItem } from "../types";
+import type { OptionsOverrides, TypedFlatConfigItem } from "../types";
 
 /**
  * Perfectionist plugin for props and items sorting.
+ *
  * @see https://github.com/azat-io/eslint-plugin-perfectionist
  */
-export async function perfectionist(): Promise<TypedFlatConfigItem[]> {
+export async function perfectionist(
+  options: OptionsOverrides,
+): Promise<TypedFlatConfigItem[]> {
+  const { overrides = {} } = options;
+
   return [
     {
       name: "limitlesspc/perfectionist/setup",
@@ -13,24 +18,22 @@ export async function perfectionist(): Promise<TypedFlatConfigItem[]> {
         perfectionist: pluginPerfectionist,
       },
       rules: {
-        "perfectionist/sort-exports": [
-          "warn",
-          {
-            type: "natural",
-          },
-        ],
+        "perfectionist/sort-exports": ["warn", { type: "natural" }],
         "perfectionist/sort-imports": [
           "warn",
           {
-            customGroups: {
-              value: {
-                svelte: ["\\.svelte$"],
+            customGroups: [
+              {
+                elementNamePattern: "\\.svelte$",
+                groupName: "svelte",
               },
-            },
+            ],
             groups: ["svelte", "import"],
             type: "natural",
           },
         ],
+
+        ...overrides,
       },
     },
   ];

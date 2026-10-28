@@ -2,18 +2,13 @@
   "name": "@limitlesspc/eslint-config",
   "type": "module",
   "version": "0.20.2",
-  "packageManager": "pnpm@10.25.0",
+  "packageManager": "pnpm@12.15.0",
   "description": "ESLint config",
   "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
   "exports": {
     ".": "./dist/index.mjs",
     "./package.json": "./package.json"
   },
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
   "files": [
     "dist"
@@ -24,21 +19,24 @@
     "build": "nr gen && tsdown --clean --dts",
     "stub": "tsdown",
     "dev": "npx @eslint/config-inspector --config eslint.config.ts",
-    "build:inspector": "pnpm build && npx @eslint/config-inspector build",
+    "build:inspector": "pnpm build && npx @eslint/config-inspector build --stats --config eslint.config.ts --out-dir ./.eslint-config-inspector",
     "watch": "tsdown --watch",
     "lint": "eslint",
     "gen": "tsx scripts/typegen.ts",
     "prepack": "nr build",
     "release": "bumpp",
-    "test": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "peerDependencies": {
-    "eslint": "^9.10.0",
+    "eslint": "^9.10.0 || ^10.0.0",
+    "eslint-plugin-erasable-syntax-only": "^0.7.1",
     "eslint-plugin-svelte": ">=2.35.1",
     "svelte-eslint-parser": ">=0.37.0"
   },
   "peerDependenciesMeta": {
+    "eslint-plugin-erasable-syntax-only": {
+      "optional": true
+    },
     "eslint-plugin-svelte": {
       "optional": true
     },
@@ -49,6 +47,7 @@
   "dependencies": {
     "@antfu/install-pkg": "catalog:prod",
     "@clack/prompts": "catalog:prod",
+    "@e18e/eslint-plugin": "catalog:prod",
     "@eslint-community/eslint-plugin-eslint-comments": "catalog:prod",
     "@typescript-eslint/eslint-plugin": "catalog:prod",
     "@typescript-eslint/parser": "catalog:prod",
@@ -65,7 +64,6 @@
     "eslint-plugin-unicorn": "catalog:prod",
     "eslint-plugin-unused-imports": "catalog:prod",
     "globals": "catalog:prod",
-    "jsonc-eslint-parser": "catalog:prod",
     "local-pkg": "catalog:prod",
     "parse-gitignore": "catalog:prod"
   },
@@ -73,17 +71,20 @@
     "@antfu/ni": "catalog:dev",
     "@eslint/config-inspector": "catalog:dev",
     "@limitlesspc/eslint-config": "workspace:*",
-    "@limitlesspc/prettier-config": "^1.2.1",
+    "@limitlesspc/prettier-config": "catalog:dev",
     "@types/node": "catalog:dev",
+    "baseline-browser-mapping": "catalog:dev",
     "bumpp": "catalog:dev",
     "eslint": "catalog:peer",
     "eslint-plugin-erasable-syntax-only": "catalog:peer",
     "eslint-plugin-svelte": "catalog:peer",
     "eslint-typegen": "catalog:dev",
     "jiti": "catalog:dev",
+    "prettier": "catalog:dev",
     "svelte": "catalog:peer",
     "svelte-eslint-parser": "catalog:peer",
     "tsdown": "catalog:dev",
+    "tsdown-stale-guard": "catalog:dev",
     "tsx": "catalog:dev",
     "typescript": "catalog:dev"
   },
@@ -91,7 +92,10 @@
     "@eslint-community/eslint-utils": "catalog:peer",
     "@typescript-eslint/types": "catalog:peer",
     "@typescript-eslint/utils": "catalog:peer",
+    "chokidar": "catalog:dev",
     "eslint": "catalog:peer",
+    "semver": "catalog:dev",
+    "synckit": "catalog:dev",
     "tsx": "catalog:dev"
   }
 }

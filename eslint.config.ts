@@ -7,7 +7,6 @@ export default limitlesspc(
       erasableOnly: true,
     },
     type: "lib",
-    jsx: true,
   },
   {
     ignores: ["fixtures", "_fixtures", "**/constants-generated.ts"],

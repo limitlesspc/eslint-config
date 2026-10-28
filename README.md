@@ -168,6 +168,73 @@ Add the following settings to your `.vscode/settings.json`:
 </details>
 
 <details>
+<summary>🔲 Zed support</summary>
+
+<br>
+
+Add the following settings to your `.zed/settings.json`:
+
+```jsonc
+{
+  "format_on_save": "on",
+  // Use ESLint's --fix:
+  "code_actions_on_format": {
+    "source.fixAll.eslint": true,
+  },
+  "formatter": [],
+  // Enable eslint for all supported languages
+  // Defaults only include https://github.com/search?q=repo%3Azed-industries%2Fzed%20eslint_languages&type=code
+  "languages": {
+    "HTML": {
+      "language_servers": ["...", "eslint"],
+    },
+    "Markdown": {
+      "language_servers": ["...", "eslint"],
+    },
+    "Markdown-Inline": {
+      "language_servers": ["...", "eslint"],
+    },
+    "JSON": {
+      "language_servers": ["...", "eslint"],
+    },
+    "JSONC": {
+      "language_servers": ["...", "eslint"],
+    },
+    "YAML": {
+      "language_servers": ["...", "eslint"],
+    },
+    "CSS": {
+      "language_servers": ["...", "eslint"],
+    },
+    // Add other languages as needed
+  },
+  "lsp": {
+    "eslint": {
+      "settings": {
+        "workingDirectories": ["./"],
+
+        // Silent the stylistic rules in your IDE, but still auto fix them
+        "rulesCustomizations": [
+          { "rule": "style/*", "severity": "off", "fixable": true },
+          { "rule": "format/*", "severity": "off", "fixable": true },
+          { "rule": "*-indent", "severity": "off", "fixable": true },
+          { "rule": "*-spacing", "severity": "off", "fixable": true },
+          { "rule": "*-spaces", "severity": "off", "fixable": true },
+          { "rule": "*-order", "severity": "off", "fixable": true },
+          { "rule": "*-dangle", "severity": "off", "fixable": true },
+          { "rule": "*-newline", "severity": "off", "fixable": true },
+          { "rule": "*quotes", "severity": "off", "fixable": true },
+          { "rule": "*semi", "severity": "off", "fixable": true },
+        ],
+      },
+    },
+  },
+}
+```
+
+</details>
+
+<details>
 <summary>🟩 Neovim Support</summary>
 
 <br>
@@ -269,35 +336,38 @@ And that's it! Or you can configure each integration individually, for example:
 import antfu from "@antfu/eslint-config";
 
 export default antfu({
-  // Type of the project. 'lib' for libraries, the default is 'app'
+  /** Type of the project. 'lib' for libraries, the default is 'app' */
   type: "lib",
 
-  // `.eslintignore` is no longer supported in Flat config, use `ignores` instead
-  // The `ignores` option in the option (first argument) is specifically treated to always be global ignores
-  // And will **extend** the config's default ignores, not override them
-  // You can also pass a function to modify the default ignores
+  /**
+   * `.eslintignore` is no longer supported in Flat config, use `ignores` instead
+   * The `ignores` option in the option (first argument) is specifically treated to always be global ignores
+   * And will **extend** the config's default ignores, not override them
+   * You can also pass a function to modify the default ignores
+   */
   ignores: [
     "**/fixtures",
     // ...globs
   ],
 
-  // Parse the `.gitignore` file to get the ignores, on by default
+  /** Parse the `.gitignore` file to get the ignores, on by default */
   gitignore: true,
 
   // Enable stylistic formatting rules
-  stylistic: true,
+  // stylistic: true,
 
-  // Or customize the stylistic rules
+  /** Or customize the stylistic rules */
   stylistic: {
     indent: 2, // 4, or 'tab'
     quotes: "single", // or 'double'
+    braceStyle: "stroustrup", // '1tbs', or 'allman'
   },
 
-  // TypeScript and Vue are autodetected, you can also explicitly enable them:
+  /** TypeScript and Vue are autodetected, you can also explicitly enable them: */
   typescript: true,
   vue: true,
 
-  // Disable jsonc and yaml support
+  /** Disable jsonc and yaml support */
   jsonc: false,
   yaml: false,
 });
@@ -445,20 +515,23 @@ export default antfu(
     typescript: true,
   },
   {
-    // Remember to specify the file glob here, otherwise it might cause the vue plugin to handle non-vue files
+    /** Remember to specify the file glob here, otherwise it might cause the vue plugin to handle non-vue files */
     files: ["**/*.vue"],
     rules: {
       "vue/operator-linebreak": ["error", "before"],
     },
   },
   {
-    // Without `files`, they are general rules for all files
+    /** Without `files`, they are general rules for all files (Markdown excluded, see note below) */
     rules: {
       "style/semi": ["error", "never"],
     },
   },
 );
 ```
+
+> [!NOTE]
+> Rule overrides without an explicit `files` constraint are automatically excluded from Markdown files, via [`composer.setDefaultIgnores`](https://github.com/antfu/eslint-flat-config-utils#composersetdefaultignores). This prevents JS-only rules (e.g. `no-irregular-whitespace`, `perfectionist/sort-imports`) from crashing on `@eslint/markdown`'s `SourceCode`, which doesn't expose JS-specific methods like `getAllComments()`. If you want a rule to apply to Markdown, scope it explicitly with `files: ['**/*.md']`.
 
 We also provided the `overrides` options in each integration to make it easier:
 
@@ -475,6 +548,10 @@ export default antfu({
   typescript: {
     overrides: {
       "ts/consistent-type-definitions": ["error", "interface"],
+    },
+    /** type aware rules overrides should write here */
+    overridesTypeAware: {
+      "ts/no-unsafe-assignment": ["warn"],
     },
   },
   yaml: {
@@ -494,9 +571,9 @@ Since v2.10.0, the factory function `antfu()` returns a [`FlatConfigComposer` ob
 import antfu from "@antfu/eslint-config";
 
 export default antfu()
-  .prepend
-  // some configs before the main config
-  ()
+  .prepend(
+    // some configs before the main config
+  )
   // overrides any named configs
   .override("antfu/stylistic/rules", {
     rules: {
@@ -618,7 +695,7 @@ export default antfu({
 Running `npx eslint` should prompt you to install the required dependencies, otherwise, you can install them manually:
 
 ```bash
-npm i -D @eslint-react/eslint-plugin eslint-plugin-react-hooks eslint-plugin-react-refresh
+npm i -D @eslint-react/eslint-plugin eslint-plugin-react-refresh
 ```
 
 #### Next.js
@@ -716,6 +793,71 @@ Running `npx eslint` should prompt you to install the required dependencies, oth
 npm i -D @unocss/eslint-plugin
 ```
 
+#### Angular
+
+To enable Angular support, you need to explicitly turn it on:
+
+```js
+// eslint.config.js
+import antfu from "@antfu/eslint-config";
+
+export default antfu({
+  angular: true,
+});
+```
+
+Running `npx eslint` should prompt you to install the required dependencies, otherwise, you can install them manually:
+
+```bash
+npm i -D @angular-eslint/eslint-plugin @angular-eslint/eslint-plugin-template @angular-eslint/template-parser
+```
+
+#### Anti-Slop
+
+> [!WARNING]
+> Experimental: the enabled rule set is maintained in-house and may change in any release without following semver.
+
+To guard against low-value code patterns commonly introduced by AI agents, you can explicitly turn on the anti-slop rules:
+
+```js
+// eslint.config.js
+import antfu from "@antfu/eslint-config";
+
+export default antfu({
+  antislop: true,
+});
+```
+
+This enables [`eslint-plugin-slop`](https://github.com/antfu/eslint-plugin-slop) and a curated, in-house maintained subset of [`eslint-plugin-sonarjs`](https://github.com/SonarSource/SonarJS) rules focusing on redundant and duplicated code. It also disallows explicit `any` when TypeScript is enabled (inspired by [this writeup on keeping AI-authored code clean](https://zenn.dev/singularity/articles/clean-code-ci-for-ai-era)).
+
+You can toggle each plugin and pass options to `eslint-plugin-slop`:
+
+```js
+// eslint.config.js
+import antfu from "@antfu/eslint-config";
+
+export default antfu({
+  antislop: {
+    sonarjs: false,
+    /**
+     * an object enables `eslint-plugin-slop` and is forwarded to it
+     * via `settings.slop`, for example to only inspect recently changed code
+     */
+    slop: {
+      inspection: { mode: "recent-changes", tracebackCommits: 5 },
+    },
+  },
+});
+```
+
+Running `npx eslint` should prompt you to install the required dependencies, otherwise, you can install them manually:
+
+```bash
+npm i -D eslint-plugin-slop eslint-plugin-sonarjs
+```
+
+Since linters only see one file at a time, we recommend pairing this option with [`jscpd`](https://github.com/kucherenko/jscpd) to detect copy-paste duplication across files, and [`knip`](https://knip.dev) to find unused files, dependencies, and exports.
+
 ### Optional Rules
 
 This config also provides some optional plugins/rules for extended usage.
@@ -754,6 +896,38 @@ async function foo(msg: string): void {
 
 The command comments are usually one-off and will be removed along with the transformation.
 
+### Different Project Types in a Monorepo
+
+`type` is an option for the `antfu()` factory, rather than a property of an ESLint
+flat config or a composer override. To share an application config with library
+packages, keep `type: 'app'` and add a file-scoped rule override for the libraries:
+
+```js
+// eslint.config.js
+import antfu from "@antfu/eslint-config";
+
+export default antfu(
+  { type: "app" },
+  {
+    files: ["packages/libs/**/*.?([cm])ts", "packages/libs/**/*.?([cm])tsx"],
+    rules: {
+      "ts/explicit-function-return-type": [
+        "error",
+        {
+          allowExpressions: true,
+          allowHigherOrderFunctions: true,
+          allowIIFEs: true,
+        },
+      ],
+    },
+  },
+);
+```
+
+This requires explicit function return types in the selected library files while
+preserving the application behavior elsewhere. Adjust the library paths to match
+your workspace.
+
 ### Type Aware Rules
 
 You can optionally enable the [type aware rules](https://typescript-eslint.io/linting/typed-linting/) by passing the options object to the `typescript` config:
@@ -767,6 +941,43 @@ export default antfu({
     tsconfigPath: "tsconfig.json",
   },
 });
+```
+
+Type aware rules apply to TypeScript and TSX files by default, using
+`['**/*.?([cm])ts', '**/*.?([cm])tsx']`. Vue files are excluded by default because
+type aware linting can substantially increase lint time. To opt in for Vue files,
+enable Vue support and include them in `filesTypeAware` while retaining the
+TypeScript and TSX patterns:
+
+```js
+// eslint.config.js
+import antfu from "@antfu/eslint-config";
+
+export default antfu({
+  vue: true,
+  typescript: {
+    tsconfigPath: "tsconfig.json",
+    filesTypeAware: ["**/*.?([cm])ts", "**/*.?([cm])tsx", "**/*.vue"],
+  },
+});
+```
+
+### Prettier
+
+If you're using prettier outside eslint, you can disable the config via etc:
+
+```js
+import antfu from "@antfu/eslint-config";
+import prettierConflicts from "eslint-config-prettier";
+
+export default antfu(
+  {
+    rules: {
+      "some-rule": "off",
+    },
+  },
+  prettierConflicts,
+);
 ```
 
 ### Editor Specific Disables
@@ -864,7 +1075,7 @@ Well, you can still use Prettier to format files that are not supported well by 
 
 ### oxlint?
 
-We do have a plan to integrate [oxlint](https://github.com/Asiashield/oxlint) in someway to speed up the linting process. However there are still some blocks we are waiting for. Track the progress [in this issue: **Oxlint Integration Plan**](https://github.com/antfu/eslint-config/issues/767).
+We do have a plan to integrate [oxlint](https://github.com/oxc-project/oxc) in someway to speed up the linting process. However there are still some blocks we are waiting for. Track the progress [in this issue: **Oxlint Integration Plan**](https://github.com/antfu/eslint-config/issues/767).
 
 ### dprint?
 

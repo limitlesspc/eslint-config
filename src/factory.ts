@@ -15,6 +15,7 @@ import {
   typescript,
   unicorn,
 } from "./configs";
+import { e18e } from "./configs/e18e";
 import { regexp } from "./configs/regexp";
 import type { RuleOptions } from "./typegen";
 import type {
@@ -39,9 +40,16 @@ const flatConfigProps = [
 ] satisfies Array<keyof TypedFlatConfigItem>;
 
 export const defaultPluginRenaming = {
+  "@eslint-react": "react",
+
+  "@next/next": "next",
+  "@stylistic": "style",
   "@typescript-eslint": "ts",
   "import-lite": "import",
   "n": "node",
+  "vitest": "test",
+
+  "yml": "yaml",
 };
 
 /**
@@ -68,17 +76,23 @@ export function limitlesspc(
   const {
     autoRenamePlugins = true,
     componentExts = [],
+    e18e: enableE18e = true,
     gitignore: enableGitignore = true,
     ignores: userIgnores = [],
     imports: enableImports = true,
     jsdoc: enableJsdoc = true,
     jsx: enableJsx = true,
     node: enableNode = true,
+    perfectionist: enablePerfectionist = true,
     regexp: enableRegexp = true,
     svelte: enableSvelte = false,
-    typescript: enableTypeScript = isPackageExists("typescript"),
+    type: appType = "app",
+    typescript: enableTypeScript = isPackageExists("typescript")
+      || isPackageExists("@typescript/native-preview"),
     unicorn: enableUnicorn = true,
   } = options;
+
+  const { isInEditor } = options;
 
   const configs: Array<Awaitable<TypedFlatConfigItem[]>> = [];
 
@@ -106,14 +120,23 @@ export function limitlesspc(
 
   const typescriptOptions = resolveSubOptions(options, "typescript");
 
+  // Base configs
   configs.push(
-    ignores(userIgnores),
+    ignores(userIgnores, !enableTypeScript),
     javascript({
+      isInEditor,
       overrides: getOverrides(options, "javascript"),
     }),
     comments(),
-    perfectionist(),
   );
+
+  if (enablePerfectionist) {
+    configs.push(
+      perfectionist({
+        overrides: getOverrides(options, "perfectionist"),
+      }),
+    );
+  }
 
   if (enableNode) {
     configs.push(node());
@@ -125,6 +148,10 @@ export function limitlesspc(
 
   if (enableImports) {
     configs.push(imports(resolveSubOptions(options, "imports")));
+  }
+
+  if (enableE18e) {
+    configs.push(e18e(enableE18e === true ? {} : enableE18e));
   }
 
   if (enableUnicorn) {
@@ -141,6 +168,7 @@ export function limitlesspc(
         ...typescriptOptions,
         componentExts,
         overrides: getOverrides(options, "typescript"),
+        type: appType,
       }),
     );
   }
@@ -178,19 +206,23 @@ export function limitlesspc(
 
   // User can optionally pass a flat config item to the first argument
   // We pick the known keys as ESLint would do schema validation
-  const fusedConfig = {} as TypedFlatConfigItem;
-  for (const key of flatConfigProps) {
+  const fusedConfig = flatConfigProps.reduce((acc, key) => {
     if (key in options) {
-      fusedConfig[key] = options[key] as any;
+      acc[key] = options[key] as any;
     }
-  }
+    return acc;
+  }, {} as TypedFlatConfigItem);
   if (Object.keys(fusedConfig).length > 0) {
     configs.push([fusedConfig]);
   }
 
   let composer = new FlatConfigComposer<TypedFlatConfigItem, ConfigNames>();
 
-  composer = composer.append(...configs, ...(userConfigs as any));
+  composer = composer.append(
+    ...configs,
+
+    ...(userConfigs as any),
+  );
 
   if (autoRenamePlugins) {
     composer = composer.renamePlugins(defaultPluginRenaming);
@@ -216,7 +248,10 @@ export function getOverrides<K extends keyof OptionsConfig>(
 ): Partial<Linter.RulesRecord & RuleOptions> {
   const sub = resolveSubOptions(options, key);
   return {
-    ...(options.overrides as any)?.[key],
+    ...(
+      options.overrides as
+        Record<string, TypedFlatConfigItem["rules"]> | undefined
+    )?.[key],
     ...("overrides" in sub ? sub.overrides : {}),
   };
 }
