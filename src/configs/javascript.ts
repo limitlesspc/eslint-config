@@ -124,6 +124,7 @@ export async function javascript(
         "no-prototype-builtins": "error",
         "no-redeclare": "error", // partially handled by TypeScript (if you use `var`)
         "no-regex-spaces": "error",
+        "no-return-assign": ["error", "always"],
         "no-script-url": "error",
         "no-self-assign": "error",
         "no-self-compare": "error",
