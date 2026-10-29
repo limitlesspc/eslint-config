@@ -157,6 +157,7 @@ export async function javascript(
           "TSEnumDeclaration[const=true]",
           "TSExportAssignment",
         ],
+        "no-return-assign": ["error", "always"],
         "no-script-url": "error",
         "no-self-assign": ["error", { props: true }],
         "no-self-compare": "error",
