@@ -147,7 +147,14 @@ export async function typescript(
           { 'ts-expect-error': 'allow-with-description' },
         ],
         'ts/consistent-type-definitions': ['error', 'interface'],
-        'ts/consistent-type-imports': ['error', { prefer: 'type-imports' }],
+        'ts/consistent-type-imports': [
+          'error',
+          {
+            disallowTypeAnnotations: false,
+            fixStyle: 'separate-type-imports',
+            prefer: 'type-imports',
+          },
+        ],
         'ts/default-param-last': 'error',
         'ts/method-signature-style': ['error', 'property'], // https://www.totaltypescript.com/method-shorthand-syntax-considered-harmful
         'ts/no-dupe-class-members': 'error',
@@ -155,9 +162,16 @@ export async function typescript(
         'ts/no-invalid-void-type': 'off',
         'ts/no-non-null-assertion': 'off',
         'ts/no-redeclare': ['error', { builtinGlobals: false }],
+        'ts/no-unused-expressions': [
+          'error',
+          {
+            allowShortCircuit: true,
+            allowTaggedTemplates: true,
+            allowTernary: true,
+          },
+        ],
         'ts/no-require-imports': 'error',
         'ts/no-unsafe-unary-minus': 'error',
-        'ts/no-unused-expressions': 'error',
         'ts/no-unused-private-class-members': 'error',
         'ts/no-unused-vars': 'off', // use unused-imports/no-unused-vars instead
         'ts/no-use-before-define': [
@@ -165,6 +179,7 @@ export async function typescript(
           { classes: false, functions: false, variables: true },
         ],
         'ts/no-useless-empty-export': 'error',
+        'ts/no-empty-object-type': ['error', { allowInterfaces: 'always' }],
         'ts/no-wrapper-object-types': 'error',
         'ts/triple-slash-reference': 'off',
         'ts/unified-signatures': [

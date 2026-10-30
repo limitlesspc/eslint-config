@@ -45,7 +45,7 @@ export async function javascript(
         'curly': 'warn',
         'default-case-last': 'error',
         'default-param-last': 'error',
-        'dot-notation': 'error',
+        'dot-notation': ['error', { allowKeywords: true }],
         'eqeqeq': ['error', 'smart'],
         'for-direction': 'error',
         'func-names': ['error', 'as-needed'],
@@ -122,11 +122,40 @@ export async function javascript(
         'no-octal-escape': 'error',
         'no-proto': 'error',
         'no-prototype-builtins': 'error',
-        'no-redeclare': 'error', // partially handled by TypeScript (if you use `var`)
+        'no-redeclare': ['error', { builtinGlobals: false }], // partially handled by TypeScript (if you use `var`)
         'no-regex-spaces': 'error',
+        'no-restricted-properties': [
+          'error',
+          {
+            message:
+              'Use `Object.getPrototypeOf` or `Object.setPrototypeOf` instead.',
+            property: '__proto__',
+          },
+          {
+            message: 'Use `Object.defineProperty` instead.',
+            property: '__defineGetter__',
+          },
+          {
+            message: 'Use `Object.defineProperty` instead.',
+            property: '__defineSetter__',
+          },
+          {
+            message: 'Use `Object.getOwnPropertyDescriptor` instead.',
+            property: '__lookupGetter__',
+          },
+          {
+            message: 'Use `Object.getOwnPropertyDescriptor` instead.',
+            property: '__lookupSetter__',
+          },
+        ],
+        'no-restricted-syntax': [
+          'error',
+          'TSEnumDeclaration[const=true]',
+          'TSExportAssignment',
+        ],
         'no-return-assign': ['error', 'always'],
         'no-script-url': 'error',
-        'no-self-assign': 'error',
+        'no-self-assign': ['error', { props: true }],
         'no-self-compare': 'error',
         'no-sequences': 'error',
         'no-setter-return': 'error',
@@ -161,7 +190,10 @@ export async function javascript(
         'no-unused-labels': 'error',
         'no-unused-private-class-members': 'error',
         'no-unused-vars': 'off', // use unused-vars/no-unused-vars instead
-        'no-use-before-define': ['error', { classes: false, functions: false }],
+        'no-use-before-define': [
+          'error',
+          { classes: false, functions: false, variables: true },
+        ],
         'no-useless-assignment': 'error',
         'no-useless-backreference': 'error',
         'no-useless-call': 'error',
@@ -182,9 +214,12 @@ export async function javascript(
         ],
         'one-var': ['error', { initialized: 'never' }],
         'operator-assignment': 'error',
-        'prefer-arrow-callback': 'error',
-        'prefer-const': [
+        'prefer-arrow-callback': [
           'error',
+          { allowNamedFunctions: false, allowUnboundThis: true },
+        ],
+        'prefer-const': [
+          'warn',
           { destructuring: 'all', ignoreReadBeforeAssign: true },
         ],
         'prefer-destructuring': ['error', { array: false, object: true }],
@@ -200,20 +235,24 @@ export async function javascript(
         'radix': ['error', 'as-needed'],
         'require-yield': 'error',
         'symbol-description': 'error',
-        'unicode-bom': 'error',
+        'unicode-bom': ['error', 'never'],
         'unused-imports/no-unused-imports': 'warn',
         'unused-imports/no-unused-vars': [
-          'warn',
+          'error',
           {
             args: 'after-used',
             argsIgnorePattern: '^_',
+            ignoreRestSiblings: true,
             vars: 'all',
             varsIgnorePattern: '^_',
           },
         ],
-        'use-isnan': 'error',
+        'use-isnan': [
+          'error',
+          { enforceForIndexOf: true, enforceForSwitchCase: true },
+        ],
         'valid-typeof': ['error', { requireStringLiterals: true }],
-        'yoda': 'error',
+        'yoda': ['error', 'never'],
 
         ...overrides,
       },
