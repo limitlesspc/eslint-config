@@ -18,7 +18,6 @@
   "files": [
     "dist"
   ],
-  "prettier": "@limitlesspc/prettier-config",
   "scripts": {
     "fmt": "prettier . --write --ignore-unknown",
     "build": "nr gen && tsdown --clean --dts",

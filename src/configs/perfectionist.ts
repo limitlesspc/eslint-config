@@ -1,5 +1,5 @@
-import { pluginPerfectionist } from "../plugins";
-import type { TypedFlatConfigItem } from "../types";
+import { pluginPerfectionist } from '../plugins'
+import type { TypedFlatConfigItem } from '../types'
 
 /**
  * Perfectionist plugin for props and items sorting.
@@ -8,30 +8,30 @@ import type { TypedFlatConfigItem } from "../types";
 export async function perfectionist(): Promise<TypedFlatConfigItem[]> {
   return [
     {
-      name: "limitlesspc/perfectionist/setup",
+      name: 'limitlesspc/perfectionist/setup',
       plugins: {
         perfectionist: pluginPerfectionist,
       },
       rules: {
-        "perfectionist/sort-exports": [
-          "warn",
+        'perfectionist/sort-exports': [
+          'warn',
           {
-            type: "natural",
+            type: 'natural',
           },
         ],
-        "perfectionist/sort-imports": [
-          "warn",
+        'perfectionist/sort-imports': [
+          'warn',
           {
             customGroups: {
               value: {
-                svelte: ["\\.svelte$"],
+                svelte: ['\\.svelte$'],
               },
             },
-            groups: ["svelte", "import"],
-            type: "natural",
+            groups: ['svelte', 'import'],
+            type: 'natural',
           },
         ],
       },
     },
-  ];
+  ]
 }

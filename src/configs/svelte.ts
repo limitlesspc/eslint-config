@@ -1,27 +1,27 @@
-import { GLOB_SVELTE } from "../globs";
+import { GLOB_SVELTE } from '../globs'
 import type {
   OptionsFiles,
   OptionsHasTypeScript,
   OptionsOverrides,
   TypedFlatConfigItem,
-} from "../types";
-import { ensurePackages, interopDefault } from "../utils";
+} from '../types'
+import { ensurePackages, interopDefault } from '../utils'
 
 export async function svelte(
   options: OptionsHasTypeScript & OptionsOverrides & OptionsFiles = {},
 ): Promise<TypedFlatConfigItem[]> {
-  const { files = [GLOB_SVELTE], overrides = {} } = options;
+  const { files = [GLOB_SVELTE], overrides = {} } = options
 
-  await ensurePackages(["eslint-plugin-svelte"]);
+  await ensurePackages(['eslint-plugin-svelte'])
 
   const [pluginSvelte, parserSvelte] = await Promise.all([
-    interopDefault(import("eslint-plugin-svelte")),
-    interopDefault(import("svelte-eslint-parser")),
-  ] as const);
+    interopDefault(import('eslint-plugin-svelte')),
+    interopDefault(import('svelte-eslint-parser')),
+  ] as const)
 
   return [
     {
-      name: "limitlesspc/svelte/setup",
+      name: 'limitlesspc/svelte/setup',
       plugins: {
         svelte: pluginSvelte,
       },
@@ -31,19 +31,19 @@ export async function svelte(
       languageOptions: {
         parser: parserSvelte,
         parserOptions: {
-          extraFileExtensions: [".svelte"],
+          extraFileExtensions: ['.svelte'],
           parser:
             options.typescript ?
               ((await interopDefault(
-                import("@typescript-eslint/parser"),
+                import('@typescript-eslint/parser'),
               )) as any)
             : null,
         },
       },
-      name: "limitlesspc/svelte/rules",
-      processor: pluginSvelte.processors[".svelte"],
+      name: 'limitlesspc/svelte/rules',
+      processor: pluginSvelte.processors['.svelte'],
       rules: {
-        "import/no-mutable-exports": "off", // Svelte props are declared as mutable exports using `let` (`export let prop;`)
+        'import/no-mutable-exports': 'off', // Svelte props are declared as mutable exports using `let` (`export let prop;`)
         /**
          * Used to force a function to run when a variable changes in reactive `$:` statements
          * @example ```js
@@ -52,9 +52,9 @@ export async function svelte(
          * first option, index 0)
          * ```
          */
-        "no-constant-binary-expression": "off",
-        "no-inner-declarations": "off", // Svelte <script> tags are considered render() functions so being able to declare functions inside them is useful
-        "no-nested-ternary": "off", // Often used to define a prop
+        'no-constant-binary-expression': 'off',
+        'no-inner-declarations': 'off', // Svelte <script> tags are considered render() functions so being able to declare functions inside them is useful
+        'no-nested-ternary': 'off', // Often used to define a prop
         /**
          * Used to force a re-render for things like arrays in Svelte v4
          * @example ```js
@@ -64,98 +64,98 @@ export async function svelte(
          * array = array; // forces a re-render
          * ```
          */
-        "no-self-assign": "off",
-        "no-undef": "off", // Incompatible with most recent (attribute-form) generic types RFC
+        'no-self-assign': 'off',
+        'no-undef': 'off', // Incompatible with most recent (attribute-form) generic types RFC
         /**
          * Optional props can have a default value of undefined
          * @example ```js
          * export let prop: string | undefined = undefined; // need the '= undefined' here
          * ```
          */
-        "no-undef-init": "off",
-        "no-unused-vars": [
-          "error",
+        'no-undef-init': 'off',
+        'no-unused-vars': [
+          'error',
           {
-            args: "none",
-            caughtErrors: "none",
+            args: 'none',
+            caughtErrors: 'none',
             ignoreRestSiblings: true,
-            vars: "all",
-            varsIgnorePattern: "^(\\$\\$Props$|\\$\\$Events$|\\$\\$Slots$)",
+            vars: 'all',
+            varsIgnorePattern: '^(\\$\\$Props$|\\$\\$Events$|\\$\\$Slots$)',
           },
         ],
-        "svelte/block-lang": [
-          "error",
+        'svelte/block-lang': [
+          'error',
           {
             enforceScriptPresent: false,
             enforceStylePresent: false,
-            script: "ts",
-            style: ["scss", null],
+            script: 'ts',
+            style: ['scss', null],
           },
         ],
-        "svelte/comment-directive": [
-          "error",
+        'svelte/comment-directive': [
+          'error',
           { reportUnusedDisableDirectives: true },
         ],
-        "svelte/derived-has-same-inputs-outputs": "error",
-        "svelte/html-self-closing": ["warn", "all"],
-        "svelte/infinite-reactive-loop": "error",
-        "svelte/no-at-debug-tags": "warn",
-        "svelte/no-at-html-tags": "off", // If I use `@html` I know what I'm doing
-        "svelte/no-dupe-else-if-blocks": "error",
-        "svelte/no-dupe-on-directives": "error",
-        "svelte/no-dupe-style-properties": "error",
-        "svelte/no-dupe-use-directives": "error",
-        "svelte/no-export-load-in-svelte-module-in-kit-pages": "error",
-        "svelte/no-extra-reactive-curlies": "warn",
-        "svelte/no-ignored-unsubscribe": "error",
-        "svelte/no-immutable-reactive-statements": "error",
-        "svelte/no-inner-declarations": "error",
-        "svelte/no-not-function-handler": "error",
-        "svelte/no-object-in-text-mustaches": "error",
-        "svelte/no-reactive-functions": "error",
-        "svelte/no-reactive-literals": "error",
-        "svelte/no-reactive-reassign": "error",
-        "svelte/no-shorthand-style-property-overrides": "error",
-        "svelte/no-store-async": "error",
-        "svelte/no-target-blank": "error",
-        "svelte/no-unknown-style-directive-property": "error",
-        "svelte/no-unused-svelte-ignore": "error",
-        "svelte/no-useless-mustaches": "warn",
-        "svelte/prefer-class-directive": "error",
-        "svelte/require-event-dispatcher-types": "error",
-        "svelte/require-optimized-style-attribute": "warn",
-        "svelte/require-store-callbacks-use-set-param": "error",
-        "svelte/require-store-reactive-access": "error",
-        "svelte/require-stores-init": "error",
-        "svelte/shorthand-attribute": "warn",
-        "svelte/shorthand-directive": "warn",
-        "svelte/sort-attributes": "warn",
-        "svelte/spaced-html-comment": "warn",
-        "svelte/system": "error",
-        "svelte/valid-each-key": "error",
-        "svelte/valid-prop-names-in-kit-pages": "error",
-        "unicorn/filename-case": "off", // Svelte components are usually PascalCase, but also sometimes things like `+page.svelte` in SvelteKit
+        'svelte/derived-has-same-inputs-outputs': 'error',
+        'svelte/html-self-closing': ['warn', 'all'],
+        'svelte/infinite-reactive-loop': 'error',
+        'svelte/no-at-debug-tags': 'warn',
+        'svelte/no-at-html-tags': 'off', // If I use `@html` I know what I'm doing
+        'svelte/no-dupe-else-if-blocks': 'error',
+        'svelte/no-dupe-on-directives': 'error',
+        'svelte/no-dupe-style-properties': 'error',
+        'svelte/no-dupe-use-directives': 'error',
+        'svelte/no-export-load-in-svelte-module-in-kit-pages': 'error',
+        'svelte/no-extra-reactive-curlies': 'warn',
+        'svelte/no-ignored-unsubscribe': 'error',
+        'svelte/no-immutable-reactive-statements': 'error',
+        'svelte/no-inner-declarations': 'error',
+        'svelte/no-not-function-handler': 'error',
+        'svelte/no-object-in-text-mustaches': 'error',
+        'svelte/no-reactive-functions': 'error',
+        'svelte/no-reactive-literals': 'error',
+        'svelte/no-reactive-reassign': 'error',
+        'svelte/no-shorthand-style-property-overrides': 'error',
+        'svelte/no-store-async': 'error',
+        'svelte/no-target-blank': 'error',
+        'svelte/no-unknown-style-directive-property': 'error',
+        'svelte/no-unused-svelte-ignore': 'error',
+        'svelte/no-useless-mustaches': 'warn',
+        'svelte/prefer-class-directive': 'error',
+        'svelte/require-event-dispatcher-types': 'error',
+        'svelte/require-optimized-style-attribute': 'warn',
+        'svelte/require-store-callbacks-use-set-param': 'error',
+        'svelte/require-store-reactive-access': 'error',
+        'svelte/require-stores-init': 'error',
+        'svelte/shorthand-attribute': 'warn',
+        'svelte/shorthand-directive': 'warn',
+        'svelte/sort-attributes': 'warn',
+        'svelte/spaced-html-comment': 'warn',
+        'svelte/system': 'error',
+        'svelte/valid-each-key': 'error',
+        'svelte/valid-prop-names-in-kit-pages': 'error',
+        'unicorn/filename-case': 'off', // Svelte components are usually PascalCase, but also sometimes things like `+page.svelte` in SvelteKit
         /**
          * Optional props can have a default value of undefined
          * @example ```js
          * export let prop: string | undefined = undefined; // need the '= undefined' here
          * ```
          */
-        "unicorn/no-useless-undefined": "off",
-        "unicorn/prefer-top-level-await": "off", // Can't use top-level await in Svelte (experimental in Svelte 5.36)
+        'unicorn/no-useless-undefined': 'off',
+        'unicorn/prefer-top-level-await': 'off', // Can't use top-level await in Svelte (experimental in Svelte 5.36)
 
-        "unused-imports/no-unused-vars": [
-          "error",
+        'unused-imports/no-unused-vars': [
+          'error',
           {
-            args: "after-used",
-            argsIgnorePattern: "^_",
-            vars: "all",
-            varsIgnorePattern: "^(_|\\$\\$Props$|\\$\\$Events$|\\$\\$Slots$)",
+            args: 'after-used',
+            argsIgnorePattern: '^_',
+            vars: 'all',
+            varsIgnorePattern: '^(_|\\$\\$Props$|\\$\\$Events$|\\$\\$Slots$)',
           },
         ],
 
         ...overrides,
       },
     },
-  ];
+  ]
 }

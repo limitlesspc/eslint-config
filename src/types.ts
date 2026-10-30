@@ -1,42 +1,42 @@
-import type { ConfigNames, RuleOptions } from "./typegen";
-import type { ParserOptions } from "@typescript-eslint/parser";
-import type { Linter } from "eslint";
-import type { FlatGitignoreOptions } from "eslint-config-flat-gitignore";
+import type { ConfigNames, RuleOptions } from './typegen'
+import type { ParserOptions } from '@typescript-eslint/parser'
+import type { Linter } from 'eslint'
+import type { FlatGitignoreOptions } from 'eslint-config-flat-gitignore'
 
-export type Awaitable<T> = T | Promise<T>;
+export type Awaitable<T> = T | Promise<T>
 
 export type Rules = Record<string, Linter.RuleEntry<any> | undefined>
-  & RuleOptions;
+  & RuleOptions
 
 // eslint-disable-next-line unicorn/prefer-export-from
-export type { ConfigNames };
+export type { ConfigNames }
 
 /**
  * An updated version of ESLint's `Linter.Config`, which provides autocompletion
  * for `rules` and relaxes type limitations for `plugins` and `rules`, because
  * many plugins still lack proper type definitions.
  */
-export type TypedFlatConfigItem = Omit<Linter.Config, "plugins" | "rules"> & {
+export type TypedFlatConfigItem = Omit<Linter.Config, 'plugins' | 'rules'> & {
   /**
    * An object containing a name-value mapping of plugin names to plugin objects.
    * When `files` is specified, these plugins are only available to the matching files.
    *
    * @see [Using plugins in your configuration](https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new#using-plugins-in-your-configuration)
    */
-  plugins?: Record<string, any>;
+  plugins?: Record<string, any>
 
   /**
    * An object containing the configured rules. When `files` or `ignores` are
    * specified, these rule configurations are only available to the matching files.
    */
-  rules?: Rules;
-};
+  rules?: Rules
+}
 
 export interface OptionsFiles {
   /**
    * Override the `files` option to provide custom globs.
    */
-  files?: string[];
+  files?: string[]
 }
 
 export type OptionsTypescript =
@@ -45,7 +45,7 @@ export type OptionsTypescript =
       & OptionsTypeScriptErasableOnly)
   | (OptionsTypeScriptParserOptions
       & OptionsOverrides
-      & OptionsTypeScriptErasableOnly);
+      & OptionsTypeScriptErasableOnly)
 
 export interface OptionsComponentExts {
   /**
@@ -54,7 +54,7 @@ export interface OptionsComponentExts {
    * @example ['vue']
    * @default []
    */
-  componentExts?: string[];
+  componentExts?: string[]
 }
 
 export interface OptionsUnicorn extends OptionsOverrides {
@@ -63,26 +63,26 @@ export interface OptionsUnicorn extends OptionsOverrides {
    *
    * @default false
    */
-  allRecommended?: boolean;
+  allRecommended?: boolean
 }
 
 export interface OptionsTypeScriptParserOptions {
   /**
    * Additional parser options for TypeScript.
    */
-  parserOptions?: Partial<ParserOptions>;
+  parserOptions?: Partial<ParserOptions>
 
   /**
    * Glob patterns for files that should be type aware.
    * @default ['**\/*.{ts,tsx}']
    */
-  filesTypeAware?: string[];
+  filesTypeAware?: string[]
 
   /**
    * Glob patterns for files that should not be type aware.
    * @default ['**\/*.md\/**', '**\/*.astro/*.ts']
    */
-  ignoresTypeAware?: string[];
+  ignoresTypeAware?: string[]
 }
 
 export interface OptionsTypeScriptWithTypes {
@@ -90,20 +90,20 @@ export interface OptionsTypeScriptWithTypes {
    * When this options is provided, type aware rules will be enabled.
    * @see https://typescript-eslint.io/linting/typed-linting/
    */
-  tsconfigPath?: string;
+  tsconfigPath?: string
 
   /**
    * Override type aware rules.
    */
-  overridesTypeAware?: TypedFlatConfigItem["rules"];
+  overridesTypeAware?: TypedFlatConfigItem['rules']
 }
 
 export interface OptionsHasTypeScript {
-  typescript?: boolean;
+  typescript?: boolean
 }
 
 export interface OptionsOverrides {
-  overrides?: TypedFlatConfigItem["rules"];
+  overrides?: TypedFlatConfigItem['rules']
 }
 
 export interface OptionsProjectType {
@@ -112,7 +112,7 @@ export interface OptionsProjectType {
    *
    * @default 'app'
    */
-  type?: "app" | "lib";
+  type?: 'app' | 'lib'
 }
 
 export interface OptionsTypeScriptErasableOnly {
@@ -122,14 +122,14 @@ export interface OptionsTypeScriptErasableOnly {
    * @see https://github.com/JoshuaKGoldberg/eslint-plugin-erasable-syntax-only
    * @default false
    */
-  erasableOnly?: boolean;
+  erasableOnly?: boolean
 }
 
 export interface OptionsRegExp {
   /**
    * Override rulelevels
    */
-  level?: "error" | "warn";
+  level?: 'error' | 'warn'
 }
 
 export interface OptionsConfig
@@ -142,7 +142,7 @@ export interface OptionsConfig
    * @see https://github.com/antfu/eslint-config-flat-gitignore
    * @default true
    */
-  gitignore?: boolean | FlatGitignoreOptions;
+  gitignore?: boolean | FlatGitignoreOptions
 
   /**
    * Extend the global ignores.
@@ -152,26 +152,26 @@ export interface OptionsConfig
    *
    * @default []
    */
-  ignores?: string[] | ((originals: string[]) => string[]);
+  ignores?: string[] | ((originals: string[]) => string[])
 
   /**
    * Core rules. Can't be disabled.
    */
-  javascript?: OptionsOverrides;
+  javascript?: OptionsOverrides
 
   /**
    * Enable Node.js rules
    *
    * @default true
    */
-  node?: boolean;
+  node?: boolean
 
   /**
    * Enable JSDoc rules
    *
    * @default true
    */
-  jsdoc?: boolean;
+  jsdoc?: boolean
 
   /**
    * Enable TypeScript support.
@@ -180,7 +180,7 @@ export interface OptionsConfig
    *
    * @default auto-detect based on the dependencies
    */
-  typescript?: boolean | OptionsTypescript;
+  typescript?: boolean | OptionsTypescript
 
   /**
    * Enable JSX related rules.
@@ -189,28 +189,28 @@ export interface OptionsConfig
    *
    * @default true
    */
-  jsx?: boolean;
+  jsx?: boolean
 
   /**
    * Options for eslint-plugin-unicorn.
    *
    * @default true
    */
-  unicorn?: boolean | OptionsUnicorn;
+  unicorn?: boolean | OptionsUnicorn
 
   /**
    * Options for eslint-plugin-import-lite.
    *
    * @default true
    */
-  imports?: boolean | OptionsOverrides;
+  imports?: boolean | OptionsOverrides
 
   /**
    * Enable JSONC support.
    *
    * @default true
    */
-  jsonc?: boolean | OptionsOverrides;
+  jsonc?: boolean | OptionsOverrides
 
   /**
    * Enable regexp rules.
@@ -218,7 +218,7 @@ export interface OptionsConfig
    * @see https://ota-meshi.github.io/eslint-plugin-regexp/
    * @default true
    */
-  regexp?: boolean | (OptionsRegExp & OptionsOverrides);
+  regexp?: boolean | (OptionsRegExp & OptionsOverrides)
 
   /**
    * Enable svelte rules.
@@ -228,14 +228,14 @@ export interface OptionsConfig
    *
    * @default false
    */
-  svelte?: boolean | OptionsOverrides;
+  svelte?: boolean | OptionsOverrides
 
   /**
    * Automatically rename plugins in the config.
    *
    * @default true
    */
-  autoRenamePlugins?: boolean;
+  autoRenamePlugins?: boolean
 
   /**
    * Provide overrides for rules for each integration.
@@ -243,9 +243,9 @@ export interface OptionsConfig
    * @deprecated use `overrides` option in each integration key instead
    */
   overrides?: {
-    javascript?: TypedFlatConfigItem["rules"];
-    typescript?: TypedFlatConfigItem["rules"];
-    jsonc?: TypedFlatConfigItem["rules"];
-    svelte?: TypedFlatConfigItem["rules"];
-  };
+    javascript?: TypedFlatConfigItem['rules']
+    typescript?: TypedFlatConfigItem['rules']
+    jsonc?: TypedFlatConfigItem['rules']
+    svelte?: TypedFlatConfigItem['rules']
+  }
 }

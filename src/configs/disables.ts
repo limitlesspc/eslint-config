@@ -1,58 +1,58 @@
-import { GLOB_SRC, GLOB_SRC_EXT } from "../globs";
-import type { TypedFlatConfigItem } from "../types";
+import { GLOB_SRC, GLOB_SRC_EXT } from '../globs'
+import type { TypedFlatConfigItem } from '../types'
 
 export async function disables(): Promise<TypedFlatConfigItem[]> {
   return [
     {
       files: [`**/scripts/${GLOB_SRC}`],
-      name: "limitlesspc/disables/scripts",
+      name: 'limitlesspc/disables/scripts',
       rules: {
-        "antfu/no-top-level-await": "off",
-        "no-console": "off",
-        "ts/explicit-function-return-type": "off",
+        'antfu/no-top-level-await': 'off',
+        'no-console': 'off',
+        'ts/explicit-function-return-type': 'off',
       },
     },
     {
       files: [`**/cli/${GLOB_SRC}`, `**/cli.${GLOB_SRC_EXT}`],
-      name: "limitlesspc/disables/cli",
+      name: 'limitlesspc/disables/cli',
       rules: {
-        "antfu/no-top-level-await": "off",
-        "no-console": "off",
+        'antfu/no-top-level-await': 'off',
+        'no-console': 'off',
       },
     },
     {
-      files: ["**/bin/**/*", `**/bin.${GLOB_SRC_EXT}`],
-      name: "limitlesspc/disables/bin",
+      files: ['**/bin/**/*', `**/bin.${GLOB_SRC_EXT}`],
+      name: 'limitlesspc/disables/bin',
       rules: {
-        "antfu/no-import-dist": "off",
-        "antfu/no-import-node-modules-by-path": "off",
+        'antfu/no-import-dist': 'off',
+        'antfu/no-import-node-modules-by-path': 'off',
       },
     },
     {
-      files: ["**/*.d.?([cm])ts"],
-      name: "limitlesspc/disables/dts",
+      files: ['**/*.d.?([cm])ts'],
+      name: 'limitlesspc/disables/dts',
       rules: {
-        "eslint-comments/no-unlimited-disable": "off",
-        "import/no-duplicates": "off",
-        "no-restricted-syntax": "off",
-        "unused-imports/no-unused-vars": "off",
+        'eslint-comments/no-unlimited-disable': 'off',
+        'import/no-duplicates': 'off',
+        'no-restricted-syntax': 'off',
+        'unused-imports/no-unused-vars': 'off',
       },
     },
     {
-      files: ["**/*.js", "**/*.cjs"],
-      name: "limitlesspc/disables/cjs",
+      files: ['**/*.js', '**/*.cjs'],
+      name: 'limitlesspc/disables/cjs',
       rules: {
-        "ts/no-require-imports": "off",
+        'ts/no-require-imports': 'off',
       },
     },
     {
       files: [`**/*.config.${GLOB_SRC_EXT}`, `**/*.config.*.${GLOB_SRC_EXT}`],
-      name: "limitlesspc/disables/config-files",
+      name: 'limitlesspc/disables/config-files',
       rules: {
-        "antfu/no-top-level-await": "off",
-        "no-console": "off",
-        "ts/explicit-function-return-type": "off",
+        'antfu/no-top-level-await': 'off',
+        'no-console': 'off',
+        'ts/explicit-function-return-type': 'off',
       },
     },
-  ];
+  ]
 }

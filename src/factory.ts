@@ -14,35 +14,35 @@ import {
   svelte,
   typescript,
   unicorn,
-} from "./configs";
-import { regexp } from "./configs/regexp";
-import type { RuleOptions } from "./typegen";
+} from './configs'
+import { regexp } from './configs/regexp'
+import type { RuleOptions } from './typegen'
 import type {
   Awaitable,
   ConfigNames,
   OptionsConfig,
   TypedFlatConfigItem,
-} from "./types";
-import { interopDefault } from "./utils";
-import type { Linter } from "eslint";
-import { FlatConfigComposer } from "eslint-flat-config-utils";
-import { isPackageExists } from "local-pkg";
+} from './types'
+import { interopDefault } from './utils'
+import type { Linter } from 'eslint'
+import { FlatConfigComposer } from 'eslint-flat-config-utils'
+import { isPackageExists } from 'local-pkg'
 
 const flatConfigProps = [
-  "name",
-  "languageOptions",
-  "linterOptions",
-  "processor",
-  "plugins",
-  "rules",
-  "settings",
-] satisfies Array<keyof TypedFlatConfigItem>;
+  'name',
+  'languageOptions',
+  'linterOptions',
+  'processor',
+  'plugins',
+  'rules',
+  'settings',
+] satisfies Array<keyof TypedFlatConfigItem>
 
 export const defaultPluginRenaming = {
-  "@typescript-eslint": "ts",
-  "import-lite": "import",
-  "n": "node",
-};
+  '@typescript-eslint': 'ts',
+  'import-lite': 'import',
+  'n': 'node',
+}
 
 /**
  * Construct an array of ESLint flat config items.
@@ -55,7 +55,7 @@ export const defaultPluginRenaming = {
  *  The merged ESLint configurations.
  */
 export function limitlesspc(
-  options: OptionsConfig & Omit<TypedFlatConfigItem, "files" | "ignores"> = {},
+  options: OptionsConfig & Omit<TypedFlatConfigItem, 'files' | 'ignores'> = {},
   ...userConfigs: Array<
     Awaitable<
       | TypedFlatConfigItem
@@ -76,63 +76,63 @@ export function limitlesspc(
     node: enableNode = true,
     regexp: enableRegexp = true,
     svelte: enableSvelte = false,
-    typescript: enableTypeScript = isPackageExists("typescript"),
+    typescript: enableTypeScript = isPackageExists('typescript'),
     unicorn: enableUnicorn = true,
-  } = options;
+  } = options
 
-  const configs: Array<Awaitable<TypedFlatConfigItem[]>> = [];
+  const configs: Array<Awaitable<TypedFlatConfigItem[]>> = []
 
   if (enableGitignore) {
-    if (typeof enableGitignore !== "boolean") {
+    if (typeof enableGitignore !== 'boolean') {
       configs.push(
-        interopDefault(import("eslint-config-flat-gitignore")).then(r => [
+        interopDefault(import('eslint-config-flat-gitignore')).then((r) => [
           r({
-            name: "limitlesspc/gitignore",
+            name: 'limitlesspc/gitignore',
             ...enableGitignore,
           }),
         ]),
-      );
+      )
     } else {
       configs.push(
-        interopDefault(import("eslint-config-flat-gitignore")).then(r => [
+        interopDefault(import('eslint-config-flat-gitignore')).then((r) => [
           r({
-            name: "limitlesspc/gitignore",
+            name: 'limitlesspc/gitignore',
             strict: false,
           }),
         ]),
-      );
+      )
     }
   }
 
-  const typescriptOptions = resolveSubOptions(options, "typescript");
+  const typescriptOptions = resolveSubOptions(options, 'typescript')
 
   configs.push(
     ignores(userIgnores),
     javascript({
-      overrides: getOverrides(options, "javascript"),
+      overrides: getOverrides(options, 'javascript'),
     }),
     comments(),
     perfectionist(),
-  );
+  )
 
   if (enableNode) {
-    configs.push(node());
+    configs.push(node())
   }
 
   if (enableJsdoc) {
-    configs.push(jsdoc());
+    configs.push(jsdoc())
   }
 
   if (enableImports) {
-    configs.push(imports(resolveSubOptions(options, "imports")));
+    configs.push(imports(resolveSubOptions(options, 'imports')))
   }
 
   if (enableUnicorn) {
-    configs.push(unicorn(enableUnicorn === true ? {} : enableUnicorn));
+    configs.push(unicorn(enableUnicorn === true ? {} : enableUnicorn))
   }
 
   if (enableJsx) {
-    configs.push(jsx());
+    configs.push(jsx())
   }
 
   if (enableTypeScript) {
@@ -140,83 +140,83 @@ export function limitlesspc(
       typescript({
         ...typescriptOptions,
         componentExts,
-        overrides: getOverrides(options, "typescript"),
+        overrides: getOverrides(options, 'typescript'),
       }),
-    );
+    )
   }
 
   if (enableRegexp) {
-    configs.push(regexp(typeof enableRegexp === "boolean" ? {} : enableRegexp));
+    configs.push(regexp(typeof enableRegexp === 'boolean' ? {} : enableRegexp))
   }
 
   if (enableSvelte) {
     configs.push(
       svelte({
-        overrides: getOverrides(options, "svelte"),
+        overrides: getOverrides(options, 'svelte'),
         typescript: !!enableTypeScript,
       }),
-    );
+    )
   }
 
   if (options.jsonc ?? true) {
     configs.push(
       jsonc({
-        overrides: getOverrides(options, "jsonc"),
+        overrides: getOverrides(options, 'jsonc'),
       }),
       sortPackageJson(),
       sortTsconfig(),
-    );
+    )
   }
 
-  configs.push(disables());
+  configs.push(disables())
 
-  if ("files" in options) {
+  if ('files' in options) {
     throw new Error(
       '[@limitlesspc/eslint-config] The first argument should not contain the "files" property as the options are supposed to be global. Place it in the second or later config instead.',
-    );
+    )
   }
 
   // User can optionally pass a flat config item to the first argument
   // We pick the known keys as ESLint would do schema validation
-  const fusedConfig = {} as TypedFlatConfigItem;
+  const fusedConfig = {} as TypedFlatConfigItem
   for (const key of flatConfigProps) {
     if (key in options) {
-      fusedConfig[key] = options[key] as any;
+      fusedConfig[key] = options[key] as any
     }
   }
   if (Object.keys(fusedConfig).length > 0) {
-    configs.push([fusedConfig]);
+    configs.push([fusedConfig])
   }
 
-  let composer = new FlatConfigComposer<TypedFlatConfigItem, ConfigNames>();
+  let composer = new FlatConfigComposer<TypedFlatConfigItem, ConfigNames>()
 
-  composer = composer.append(...configs, ...(userConfigs as any));
+  composer = composer.append(...configs, ...(userConfigs as any))
 
   if (autoRenamePlugins) {
-    composer = composer.renamePlugins(defaultPluginRenaming);
+    composer = composer.renamePlugins(defaultPluginRenaming)
   }
 
-  return composer;
+  return composer
 }
 
-export type ResolvedOptions<T> = T extends boolean ? never : NonNullable<T>;
+export type ResolvedOptions<T> = T extends boolean ? never : NonNullable<T>
 
 export function resolveSubOptions<K extends keyof OptionsConfig>(
   options: OptionsConfig,
   key: K,
 ): ResolvedOptions<OptionsConfig[K]> {
-  return typeof options[key] === "boolean" ?
+  return typeof options[key] === 'boolean' ?
       ({} as any)
-    : options[key] || ({} as any);
+    : options[key] || ({} as any)
 }
 
 export function getOverrides<K extends keyof OptionsConfig>(
   options: OptionsConfig,
   key: K,
 ): Partial<Linter.RulesRecord & RuleOptions> {
-  const sub = resolveSubOptions(options, key);
+  const sub = resolveSubOptions(options, key)
   return {
     ...(options.overrides as any)?.[key],
-    ...("overrides" in sub ? sub.overrides : {}),
-  };
+    ...('overrides' in sub ? sub.overrides : {}),
+  }
 }

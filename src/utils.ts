@@ -1,13 +1,13 @@
-import type { Awaitable, TypedFlatConfigItem } from "./types";
-import { isPackageExists } from "local-pkg";
-import process from "node:process";
+import type { Awaitable, TypedFlatConfigItem } from './types'
+import { isPackageExists } from 'local-pkg'
+import process from 'node:process'
 
-const scopeUrl = import.meta.dirname;
-const isCwdInScope = isPackageExists("@limitlesspc/eslint-config");
+const scopeUrl = import.meta.dirname
+const isCwdInScope = isPackageExists('@limitlesspc/eslint-config')
 
 export const parserPlain = {
   meta: {
-    name: "parser-plain",
+    name: 'parser-plain',
   },
   parseForESLint: (code: string) => ({
     ast: {
@@ -16,7 +16,7 @@ export const parserPlain = {
       loc: { end: code.length, start: 0 },
       range: [0, code.length],
       tokens: [],
-      type: "Program",
+      type: 'Program',
     },
     scopeManager: null,
     services: { isPlain: true },
@@ -24,7 +24,7 @@ export const parserPlain = {
       Program: [],
     },
   }),
-};
+}
 
 /**
  * Combine array and non-array configs into a single array.
@@ -32,8 +32,8 @@ export const parserPlain = {
 export async function combine(
   ...configs: Array<Awaitable<TypedFlatConfigItem | TypedFlatConfigItem[]>>
 ): Promise<TypedFlatConfigItem[]> {
-  const resolved = await Promise.all(configs);
-  return resolved.flat();
+  const resolved = await Promise.all(configs)
+  return resolved.flat()
 }
 
 /**
@@ -62,12 +62,12 @@ export function renameRules(
     Object.entries(rules).map(([key, value]) => {
       for (const [from, to] of Object.entries(map)) {
         if (key.startsWith(`${from}/`)) {
-          return [to + key.slice(from.length), value];
+          return [to + key.slice(from.length), value]
         }
       }
-      return [key, value];
+      return [key, value]
     }),
-  );
+  )
 }
 
 /**
@@ -87,34 +87,34 @@ export function renamePluginInConfigs(
   configs: TypedFlatConfigItem[],
   map: Record<string, string>,
 ): TypedFlatConfigItem[] {
-  return configs.map(i => {
-    const clone = { ...i };
-    clone.rules &&= renameRules(clone.rules, map);
+  return configs.map((i) => {
+    const clone = { ...i }
+    clone.rules &&= renameRules(clone.rules, map)
     clone.plugins &&= Object.fromEntries(
       Object.entries(clone.plugins).map(([key, value]) => {
         if (key in map) {
-          return [map[key], value];
+          return [map[key], value]
         }
-        return [key, value];
+        return [key, value]
       }),
-    );
-    return clone;
-  });
+    )
+    return clone
+  })
 }
 
 export function toArray<T>(value: T | T[]): T[] {
-  return Array.isArray(value) ? value : [value];
+  return Array.isArray(value) ? value : [value]
 }
 
 export async function interopDefault<T>(
   m: Awaitable<T>,
 ): Promise<T extends { default: infer U } ? U : T> {
-  const resolved = await m;
-  return (resolved as any).default || resolved;
+  const resolved = await m
+  return (resolved as any).default || resolved
 }
 
 export function isPackageInScope(name: string): boolean {
-  return isPackageExists(name, { paths: [scopeUrl] });
+  return isPackageExists(name, { paths: [scopeUrl] })
 }
 
 export async function ensurePackages(
@@ -125,23 +125,23 @@ export async function ensurePackages(
     || process.stdout.isTTY === false
     || isCwdInScope === false
   ) {
-    return;
+    return
   }
 
   const nonExistingPackages = packages.filter(
-    i => i && !isPackageInScope(i),
-  ) as string[];
+    (i) => i && !isPackageInScope(i),
+  ) as string[]
   if (nonExistingPackages.length === 0) {
-    return;
+    return
   }
 
-  const p = await import("@clack/prompts");
+  const p = await import('@clack/prompts')
   const result = await p.confirm({
-    message: `${nonExistingPackages.length === 1 ? "Package is" : "Packages are"} required for this config: ${nonExistingPackages.join(", ")}. Do you want to install them?`,
-  });
+    message: `${nonExistingPackages.length === 1 ? 'Package is' : 'Packages are'} required for this config: ${nonExistingPackages.join(', ')}. Do you want to install them?`,
+  })
   if (result) {
-    await import("@antfu/install-pkg").then(i =>
+    await import('@antfu/install-pkg').then((i) =>
       i.installPackage(nonExistingPackages, { dev: true }),
-    );
+    )
   }
 }

@@ -1,4 +1,4 @@
-import type { OptionsConfig } from "./types";
+import type { OptionsConfig } from './types'
 
 // @keep-sorted
 export const CONFIG_PRESET_FULL_ON: OptionsConfig = {
@@ -12,10 +12,10 @@ export const CONFIG_PRESET_FULL_ON: OptionsConfig = {
   svelte: true,
   typescript: {
     erasableOnly: true,
-    tsconfigPath: "tsconfig.json",
+    tsconfigPath: 'tsconfig.json',
   },
   unicorn: true,
-};
+}
 
 export const CONFIG_PRESET_FULL_OFF: OptionsConfig = {
   gitignore: false,
@@ -28,4 +28,4 @@ export const CONFIG_PRESET_FULL_OFF: OptionsConfig = {
   svelte: false,
   typescript: false,
   unicorn: false,
-};
+}
