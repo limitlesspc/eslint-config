@@ -46,8 +46,6 @@ export async function javascript(
       rules: {
         'accessor-pairs': 'error',
 
-        'antfu/no-top-level-await': 'error',
-
         'array-callback-return': 'error',
         'arrow-body-style': 'error',
         'block-scoped-var': 'error',
