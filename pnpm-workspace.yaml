@@ -1,37 +1,9 @@
-ignoreWorkspaceRootCheck: true
-
-minimumReleaseAgeExcludePrune: true
-minimumReleaseAgeExclude:
-  - eslint-plugin-antfu@3.3.1
-  - '@es-joy/jsdoccomment@1.0.0'
-  - baseline-browser-mapping@2.11.31
-  - eslint-plugin-jsdoc@65.4.1
-  - jsdoc-type-pratt-parser@9.4.0
-  - svelte-eslint-parser@1.10.0
-
-trustPolicy: no-downgrade
-trustPolicyExclude:
-  - cached-factory@0.1.0
-
-update:
-  ignoreDeps:
-    - typescript@7
-
-strictPeerDependencies: false
-shamefullyHoist: true
-shellEmulator: true
-
 packages:
   - fixtures/*
 
 allowBuilds:
   esbuild: true
   simple-git-hooks: true
-
-onlyBuiltDependencies:
-  - esbuild
-  - simple-git-hooks
-  - unrs-resolver
 
 catalogs:
   dev:
@@ -40,11 +12,11 @@ catalogs:
     '@eslint/config-inspector': ^3.5.0
     '@limitlesspc/prettier-config': ^1.2.1
     '@types/eslint-plugin-jsx-a11y': ^6.10.1
-    '@types/node': ^26.6.5
-    baseline-browser-mapping: ^2.11.31
+    '@types/node': ^26.6.6
+    baseline-browser-mapping: ^2.11.34
     bumpp: ^12.3.0
     chokidar: ^6.0.0
-    eslint-typegen: ^2.3.1
+    eslint-typegen: ^2.3.2
     jiti: ^2.7.0
     lint-staged: ^17.6.0
     pnpm-workspace-yaml: ^1.9.1
@@ -55,7 +27,7 @@ catalogs:
     synckit: ^0.12.3
     tinyexec: ^1.3.1
     tinyglobby: ^0.2.17
-    tsdown: ^0.23.1
+    tsdown: ^0.23.4
     tsdown-stale-guard: ^0.1.3
     tsnapi: ^1.5.0
     tsx: ^4.23.15
@@ -88,7 +60,7 @@ catalogs:
     eslint-plugin-vuejs-accessibility: ^2.6.3
     prettier-plugin-astro: ^1.1.1
     prettier-plugin-slidev: ^1.0.5
-    svelte: ^5.57.2
+    svelte: ^5.57.3
     svelte-eslint-parser: ^1.10.0
     vue: ^3.5.44
   prod:
@@ -98,8 +70,8 @@ catalogs:
     '@eslint-community/eslint-plugin-eslint-comments': ^4.8.1
     '@eslint/markdown': ^8.0.3
     '@stylistic/eslint-plugin': ^5.10.0
-    '@typescript-eslint/eslint-plugin': ^8.72.0
-    '@typescript-eslint/parser': ^8.72.0
+    '@typescript-eslint/eslint-plugin': ^8.72.1
+    '@typescript-eslint/parser': ^8.72.1
     '@vitest/eslint-plugin': ^1.6.28
     ansis: ^4.4.0
     cac: ^7.1.0
@@ -109,13 +81,13 @@ catalogs:
     eslint-plugin-antfu: ^3.3.1
     eslint-plugin-command: ^4.0.0
     eslint-plugin-import-lite: ^0.6.0
-    eslint-plugin-jsdoc: ^65.4.1
+    eslint-plugin-jsdoc: ^65.4.2
     eslint-plugin-jsonc: ^3.4.2
     eslint-plugin-n: ^18.5.0
     eslint-plugin-no-only-tests: ^3.4.0
     eslint-plugin-perfectionist: ^5.13.0
     eslint-plugin-pnpm: ^1.9.1
-    eslint-plugin-regexp: ^3.3.1
+    eslint-plugin-regexp: ^3.3.2
     eslint-plugin-toml: ^1.5.0
     eslint-plugin-unicorn: ^78.0.0
     eslint-plugin-unused-imports: ^4.4.1
@@ -128,3 +100,35 @@ catalogs:
     toml-eslint-parser: ^1.0.3
     vue-eslint-parser: ^10.4.1
     yaml-eslint-parser: ^2.1.0
+
+ignoreWorkspaceRootCheck: true
+
+minimumReleaseAgeExclude:
+  - eslint-plugin-antfu@3.3.1
+  - '@es-joy/jsdoccomment@1.0.0'
+  - baseline-browser-mapping@2.11.31
+  - eslint-plugin-jsdoc@65.4.1
+  - jsdoc-type-pratt-parser@9.4.0
+  - svelte-eslint-parser@1.10.0
+
+minimumReleaseAgeExcludePrune: true
+
+onlyBuiltDependencies:
+  - esbuild
+  - simple-git-hooks
+  - unrs-resolver
+
+shamefullyHoist: true
+
+shellEmulator: true
+
+strictPeerDependencies: false
+
+trustPolicy: no-downgrade
+
+trustPolicyExclude:
+  - cached-factory@0.1.0
+
+update:
+  ignoreDeps:
+    - typescript@7

@@ -2,7 +2,7 @@
   "name": "@limitlesspc/eslint-config",
   "type": "module",
   "version": "0.23.1",
-  "packageManager": "pnpm@11.28.7",
+  "packageManager": "pnpm@10.25.0",
   "description": "ESLint config",
   "license": "MIT",
   "exports": {
@@ -75,7 +75,7 @@
     "@types/node": "catalog:dev",
     "baseline-browser-mapping": "catalog:dev",
     "bumpp": "catalog:dev",
-    "eslint": "catalog:peer",
+    "eslint": "^9.39.5",
     "eslint-plugin-erasable-syntax-only": "catalog:peer",
     "eslint-plugin-svelte": "catalog:peer",
     "eslint-typegen": "catalog:dev",
@@ -85,7 +85,7 @@
     "svelte-eslint-parser": "catalog:peer",
     "tsdown": "catalog:dev",
     "tsdown-stale-guard": "catalog:dev",
-    "tsx": "catalog:dev",
+    "tsx": "^4.23.15",
     "typescript": "catalog:dev"
   },
   "resolutions": {
