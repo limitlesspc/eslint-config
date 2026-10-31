@@ -34,9 +34,7 @@ export async function svelte(
           extraFileExtensions: ['.svelte'],
           parser:
             options.typescript ?
-              ((await interopDefault(
-                import('@typescript-eslint/parser'),
-              )) as any)
+              await interopDefault(import('@typescript-eslint/parser'))
             : null,
         },
       },
@@ -53,6 +51,7 @@ export async function svelte(
          * ```
          */
         'no-constant-binary-expression': 'off',
+
         'no-inner-declarations': 'off', // Svelte <script> tags are considered render() functions so being able to declare functions inside them is useful
         'no-nested-ternary': 'off', // Often used to define a prop
         /**
@@ -65,7 +64,7 @@ export async function svelte(
          * ```
          */
         'no-self-assign': 'off',
-        'no-undef': 'off', // Incompatible with most recent (attribute-form) generic types RFC
+        'no-undef': 'off', // incompatible with most recent (attribute-form) generic types RFC
         /**
          * Optional props can have a default value of undefined
          * @example ```js

@@ -1,5 +1,4 @@
-/* eslint-disable perfectionist/sort-objects */
-import { GLOB_TS, GLOB_TSX } from '../globs'
+import { GLOB_ASTRO_TS, GLOB_MARKDOWN, GLOB_TS, GLOB_TSX } from '../globs'
 import { pluginAntfu } from '../plugins'
 import type {
   OptionsComponentExts,
@@ -40,8 +39,12 @@ export async function typescript(
   ]
 
   const filesTypeAware = options.filesTypeAware ?? [GLOB_TS, GLOB_TSX]
-  const ignoresTypeAware = options.ignoresTypeAware ?? []
-  const tsconfigPath = options?.tsconfigPath
+  const ignoresTypeAware = options.ignoresTypeAware ?? [
+    `${GLOB_MARKDOWN}/**`,
+    GLOB_ASTRO_TS,
+  ]
+  // eslint-disable-next-line unicorn/prefer-logical-operator-over-ternary
+  const tsconfigPath = options?.tsconfigPath ? options.tsconfigPath : undefined
   const isTypeAware = !!tsconfigPath
 
   const typeAwareRules: TypedFlatConfigItem['rules'] = {
@@ -100,27 +103,27 @@ export async function typescript(
               tsconfigRootDir: process.cwd(),
             }
           : {}),
-          ...(parserOptions as any),
+          ...parserOptions,
         },
       },
-      name: `limitlesspc/typescript/${typeAware ? 'type-aware-parser' : 'parser'}`,
+      name: `antfu/typescript/${typeAware ? 'type-aware-parser' : 'parser'}`,
     }
   }
 
   return [
     {
-      // Install the plugins without globs, so they can be configured separately.
+      /** Install the plugins without globs, so they can be configured separately. */
       name: 'limitlesspc/typescript/setup',
       plugins: {
         antfu: pluginAntfu,
-        ts: pluginTs as any,
+        ts: pluginTs,
       },
     },
-    // Assign type-aware parser for type-aware files and type-unaware parser for the rest
+    // assign type-aware parser for type-aware files and type-unaware parser for the rest
     ...(isTypeAware ?
       [
+        makeParser(false, files),
         makeParser(true, filesTypeAware, ignoresTypeAware),
-        makeParser(false, files, filesTypeAware),
       ]
     : [makeParser(false, files)]),
     {
@@ -136,7 +139,22 @@ export async function typescript(
         }),
 
         'antfu/no-ts-export-equal': 'error',
+        'constructor-super': 'off',
         'default-param-last': 'off',
+        'getter-return': 'off',
+        'no-const-assign': 'off',
+        'no-dupe-args': 'off',
+        'no-dupe-class-members': 'off',
+        'no-dupe-keys': 'off',
+        'no-func-assign': 'off',
+        'no-invalid-this': 'off',
+        'no-obj-calls': 'off',
+        'no-redeclare': 'off',
+        'no-setter-return': 'off',
+        'no-this-before-super': 'off',
+        'no-undef': 'off',
+        'no-unreachable': 'off',
+        'no-unsafe-negation': 'off',
         'no-unused-expressions': 'off',
         'no-unused-private-class-members': 'off', // use ts/no-unused-private-class-members
         'no-use-before-define': 'off',
@@ -158,10 +176,14 @@ export async function typescript(
         'ts/default-param-last': 'error',
         'ts/method-signature-style': ['error', 'property'], // https://www.totaltypescript.com/method-shorthand-syntax-considered-harmful
         'ts/no-dupe-class-members': 'error',
+        'ts/no-empty-object-type': ['error', { allowInterfaces: 'always' }],
         'ts/no-explicit-any': 'off',
+        'ts/no-import-type-side-effects': 'error',
         'ts/no-invalid-void-type': 'off',
         'ts/no-non-null-assertion': 'off',
         'ts/no-redeclare': ['error', { builtinGlobals: false }],
+        'ts/no-require-imports': 'error',
+        'ts/no-unsafe-unary-minus': 'error',
         'ts/no-unused-expressions': [
           'error',
           {
@@ -170,8 +192,6 @@ export async function typescript(
             allowTernary: true,
           },
         ],
-        'ts/no-require-imports': 'error',
-        'ts/no-unsafe-unary-minus': 'error',
         'ts/no-unused-private-class-members': 'error',
         'ts/no-unused-vars': 'off', // use unused-imports/no-unused-vars instead
         'ts/no-use-before-define': [
@@ -179,7 +199,6 @@ export async function typescript(
           { classes: false, functions: false, variables: true },
         ],
         'ts/no-useless-empty-export': 'error',
-        'ts/no-empty-object-type': ['error', { allowInterfaces: 'always' }],
         'ts/no-wrapper-object-types': 'error',
         'ts/triple-slash-reference': 'off',
         'ts/unified-signatures': [
@@ -189,23 +208,6 @@ export async function typescript(
             ignoreOverloadsWithDifferentJSDoc: true,
           },
         ],
-
-        // TypeScript handles these by itself
-        'constructor-super': 'off',
-        'getter-return': 'off',
-        'no-const-assign': 'off',
-        'no-dupe-args': 'off',
-        'no-dupe-class-members': 'off',
-        'no-dupe-keys': 'off',
-        'no-func-assign': 'off',
-        'no-obj-calls': 'off',
-        'no-redeclare': 'off',
-        'no-setter-return': 'off',
-        'no-this-before-super': 'off',
-        'no-undef': 'off',
-        'no-unreachable': 'off',
-        'no-unsafe-negation': 'off',
-        'no-invalid-this': 'off',
 
         ...(type === 'lib' ?
           {
@@ -246,6 +248,7 @@ export async function typescript(
           },
           rules: {
             'erasable-syntax-only/enums': 'error',
+            'erasable-syntax-only/export-aliases': 'error',
             'erasable-syntax-only/import-aliases': 'error',
             'erasable-syntax-only/namespaces': 'error',
             'erasable-syntax-only/parameter-properties': 'error',

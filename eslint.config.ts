@@ -6,6 +6,7 @@ export default limitlesspc(
     typescript: {
       erasableOnly: true,
     },
+    perfectionist: true,
     type: 'lib',
     jsx: true,
   },

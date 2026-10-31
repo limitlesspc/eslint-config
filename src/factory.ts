@@ -1,4 +1,5 @@
 import {
+  command,
   comments,
   disables,
   ignores,
@@ -15,6 +16,7 @@ import {
   typescript,
   unicorn,
 } from './configs'
+import { e18e } from './configs/e18e'
 import { regexp } from './configs/regexp'
 import type { RuleOptions } from './typegen'
 import type {
@@ -23,7 +25,7 @@ import type {
   OptionsConfig,
   TypedFlatConfigItem,
 } from './types'
-import { interopDefault } from './utils'
+import { interopDefault, isInEditorEnv } from './utils'
 import type { Linter } from 'eslint'
 import { FlatConfigComposer } from 'eslint-flat-config-utils'
 import { isPackageExists } from 'local-pkg'
@@ -68,17 +70,31 @@ export function limitlesspc(
   const {
     autoRenamePlugins = true,
     componentExts = [],
+    e18e: enableE18e = true,
     gitignore: enableGitignore = true,
     ignores: userIgnores = [],
     imports: enableImports = true,
     jsdoc: enableJsdoc = true,
     jsx: enableJsx = true,
     node: enableNode = true,
+    perfectionist: enablePerfectionist = true,
     regexp: enableRegexp = true,
     svelte: enableSvelte = false,
-    typescript: enableTypeScript = isPackageExists('typescript'),
+    type: appType = 'app',
+    typescript: enableTypeScript = isPackageExists('typescript')
+      || isPackageExists('@typescript/native-preview'),
     unicorn: enableUnicorn = true,
   } = options
+
+  let { isInEditor } = options
+  if (isInEditor == null) {
+    isInEditor = isInEditorEnv()
+    if (isInEditor) {
+      console.log(
+        '[@antfu/eslint-config] Detected running in editor, some rules are disabled.',
+      )
+    }
+  }
 
   const configs: Array<Awaitable<TypedFlatConfigItem[]>> = []
 
@@ -106,14 +122,24 @@ export function limitlesspc(
 
   const typescriptOptions = resolveSubOptions(options, 'typescript')
 
+  // Base configs
   configs.push(
-    ignores(userIgnores),
+    ignores(userIgnores, !enableTypeScript),
     javascript({
+      isInEditor,
       overrides: getOverrides(options, 'javascript'),
     }),
     comments(),
-    perfectionist(),
+    command(),
   )
+
+  if (enablePerfectionist) {
+    configs.push(
+      perfectionist({
+        overrides: getOverrides(options, 'perfectionist'),
+      }),
+    )
+  }
 
   if (enableNode) {
     configs.push(node())
@@ -124,7 +150,20 @@ export function limitlesspc(
   }
 
   if (enableImports) {
-    configs.push(imports(resolveSubOptions(options, 'imports')))
+    configs.push(
+      imports({
+        ...resolveSubOptions(options, 'imports'),
+      }),
+    )
+  }
+
+  if (enableE18e) {
+    configs.push(
+      e18e({
+        isInEditor,
+        ...(enableE18e === true ? {} : enableE18e),
+      }),
+    )
   }
 
   if (enableUnicorn) {
@@ -141,6 +180,7 @@ export function limitlesspc(
         ...typescriptOptions,
         componentExts,
         overrides: getOverrides(options, 'typescript'),
+        type: appType,
       }),
     )
   }
@@ -172,28 +212,44 @@ export function limitlesspc(
 
   if ('files' in options) {
     throw new Error(
-      '[@limitlesspc/eslint-config] The first argument should not contain the "files" property as the options are supposed to be global. Place it in the second or later config instead.',
+      '[@antfu/eslint-config] The first argument should not contain the "files" property as the options are supposed to be global. Place it in the second or later config instead.',
     )
   }
 
   // User can optionally pass a flat config item to the first argument
   // We pick the known keys as ESLint would do schema validation
-  const fusedConfig = {} as TypedFlatConfigItem
-  for (const key of flatConfigProps) {
+  const fusedConfig = flatConfigProps.reduce((acc, key) => {
     if (key in options) {
-      fusedConfig[key] = options[key] as any
+      acc[key] = options[key] as any
     }
-  }
+    return acc
+  }, {} as TypedFlatConfigItem)
   if (Object.keys(fusedConfig).length > 0) {
     configs.push([fusedConfig])
   }
 
   let composer = new FlatConfigComposer<TypedFlatConfigItem, ConfigNames>()
 
-  composer = composer.append(...configs, ...(userConfigs as any))
+  composer = composer.append(
+    ...configs,
+
+    ...(userConfigs as any),
+  )
 
   if (autoRenamePlugins) {
     composer = composer.renamePlugins(defaultPluginRenaming)
+  }
+
+  if (isInEditor) {
+    composer = composer.disableRulesFix(
+      ['unused-imports/no-unused-imports', 'prefer-const'],
+      {
+        builtinRules: () =>
+          import(['eslint', 'use-at-your-own-risk'].join('/')).then(
+            (r) => r.builtinRules,
+          ),
+      },
+    )
   }
 
   return composer
@@ -216,7 +272,10 @@ export function getOverrides<K extends keyof OptionsConfig>(
 ): Partial<Linter.RulesRecord & RuleOptions> {
   const sub = resolveSubOptions(options, key)
   return {
-    ...(options.overrides as any)?.[key],
+    ...(
+      options.overrides as
+        Record<string, TypedFlatConfigItem['rules']> | undefined
+    )?.[key],
     ...('overrides' in sub ? sub.overrides : {}),
   }
 }

@@ -1,8 +1,10 @@
 import type { Awaitable, TypedFlatConfigItem } from './types'
 import { isPackageExists } from 'local-pkg'
 import process from 'node:process'
+import { fileURLToPath } from 'node:url'
 
-const scopeUrl = import.meta.dirname
+// eslint-disable-next-line unicorn/prefer-import-meta-properties
+const scopeUrl = fileURLToPath(new URL('.', import.meta.url))
 const isCwdInScope = isPackageExists('@limitlesspc/eslint-config')
 
 export const parserPlain = {
@@ -80,6 +82,7 @@ export function renameRules(
  *
  * export default renamePluginInConfigs(someConfigs, {
  *   '@typescript-eslint': 'ts',
+ *   '@stylistic': 'style',
  * })
  * ```
  */
@@ -110,11 +113,14 @@ export async function interopDefault<T>(
   m: Awaitable<T>,
 ): Promise<T extends { default: infer U } ? U : T> {
   const resolved = await m
+
   return (resolved as any).default || resolved
 }
 
 export function isPackageInScope(name: string): boolean {
-  return isPackageExists(name, { paths: [scopeUrl] })
+  return isPackageExists(name, {
+    paths: [scopeUrl],
+  })
 }
 
 export async function ensurePackages(
@@ -137,11 +143,38 @@ export async function ensurePackages(
 
   const p = await import('@clack/prompts')
   const result = await p.confirm({
-    message: `${nonExistingPackages.length === 1 ? 'Package is' : 'Packages are'} required for this config: ${nonExistingPackages.join(', ')}. Do you want to install them?`,
+    message: `${
+      nonExistingPackages.length === 1 ? 'Package is' : 'Packages are'
+    } required for this config: ${nonExistingPackages.join(', ')}. Do you want to install them?`,
   })
   if (result) {
     await import('@antfu/install-pkg').then((i) =>
       i.installPackage(nonExistingPackages, { dev: true }),
     )
   }
+}
+
+export function isInEditorEnv(): boolean {
+  if (process.env.CI) {
+    return false
+  }
+  if (isInGitHooksOrLintStaged()) {
+    return false
+  }
+  return !!(
+    process.env.VSCODE_PID
+    || process.env.VSCODE_CWD
+    || process.env.JETBRAINS_IDE
+    || process.env.VIM
+    || process.env.NVIM
+    || (process.env.ZED_ENVIRONMENT && !process.env.ZED_TERM)
+  )
+}
+
+export function isInGitHooksOrLintStaged(): boolean {
+  return !!(
+    process.env.GIT_PARAMS
+    || process.env.VSCODE_GIT_COMMAND
+    || process.env.npm_lifecycle_script?.startsWith('lint-staged')
+  )
 }

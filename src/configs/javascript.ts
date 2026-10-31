@@ -1,11 +1,15 @@
-import { pluginUnusedImports } from '../plugins'
-import type { OptionsOverrides, TypedFlatConfigItem } from '../types'
+import { pluginAntfu, pluginUnusedImports } from '../plugins'
+import type {
+  OptionsIsInEditor,
+  OptionsOverrides,
+  TypedFlatConfigItem,
+} from '../types'
 import globals from 'globals'
 
 export async function javascript(
-  options: OptionsOverrides = {},
+  options: OptionsIsInEditor & OptionsOverrides = {},
 ): Promise<TypedFlatConfigItem[]> {
-  const { overrides = {} } = options
+  const { isInEditor = false, overrides = {} } = options
 
   return [
     {
@@ -31,12 +35,19 @@ export async function javascript(
       linterOptions: {
         reportUnusedDisableDirectives: true,
       },
+      name: 'limitlesspc/javascript/setup',
+    },
+    {
       name: 'limitlesspc/javascript/rules',
       plugins: {
+        'antfu': pluginAntfu,
         'unused-imports': pluginUnusedImports,
       },
       rules: {
         'accessor-pairs': 'error',
+
+        'antfu/no-top-level-await': 'error',
+
         'array-callback-return': 'error',
         'arrow-body-style': 'error',
         'block-scoped-var': 'error',
@@ -219,8 +230,11 @@ export async function javascript(
           { allowNamedFunctions: false, allowUnboundThis: true },
         ],
         'prefer-const': [
-          'warn',
-          { destructuring: 'all', ignoreReadBeforeAssign: true },
+          isInEditor ? 'warn' : 'error',
+          {
+            destructuring: 'all',
+            ignoreReadBeforeAssign: true,
+          },
         ],
         'prefer-destructuring': ['error', { array: false, object: true }],
         'prefer-exponentiation-operator': 'error',
@@ -236,7 +250,7 @@ export async function javascript(
         'require-yield': 'error',
         'symbol-description': 'error',
         'unicode-bom': ['error', 'never'],
-        'unused-imports/no-unused-imports': 'warn',
+        'unused-imports/no-unused-imports': isInEditor ? 'warn' : 'error',
         'unused-imports/no-unused-vars': [
           'error',
           {

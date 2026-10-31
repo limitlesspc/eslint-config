@@ -1,28 +1,30 @@
-import type { ConfigNames, RuleOptions } from './typegen'
+import type { RuleOptions } from './typegen'
 import type { ParserOptions } from '@typescript-eslint/parser'
 import type { Linter } from 'eslint'
 import type { FlatGitignoreOptions } from 'eslint-config-flat-gitignore'
+import type { ConfigWithExtends } from 'eslint-flat-config-utils'
 
 export type Awaitable<T> = T | Promise<T>
 
 export type Rules = Record<string, Linter.RuleEntry<any> | undefined>
   & RuleOptions
 
-// eslint-disable-next-line unicorn/prefer-export-from
-export type { ConfigNames }
-
 /**
  * An updated version of ESLint's `Linter.Config`, which provides autocompletion
  * for `rules` and relaxes type limitations for `plugins` and `rules`, because
  * many plugins still lack proper type definitions.
  */
-export type TypedFlatConfigItem = Omit<Linter.Config, 'plugins' | 'rules'> & {
+export type TypedFlatConfigItem = Omit<
+  ConfigWithExtends,
+  'plugins' | 'rules'
+> & {
   /**
    * An object containing a name-value mapping of plugin names to plugin objects.
    * When `files` is specified, these plugins are only available to the matching files.
    *
    * @see [Using plugins in your configuration](https://eslint.org/docs/latest/user-guide/configuring/configuration-files-new#using-plugins-in-your-configuration)
    */
+
   plugins?: Record<string, any>
 
   /**
@@ -55,6 +57,30 @@ export interface OptionsComponentExts {
    * @default []
    */
   componentExts?: string[]
+}
+
+export interface OptionsE18e extends OptionsOverrides {
+  /**
+   * Include modernization rules
+   *
+   * @see https://github.com/e18e/eslint-plugin#modernization
+   * @default true
+   */
+  modernization?: boolean
+  /**
+   * Include module replacements rules
+   *
+   * @see https://github.com/e18e/eslint-plugin#module-replacements
+   * @default type === 'lib' && isInEditor
+   */
+  moduleReplacements?: boolean
+  /**
+   * Include performance improvements rules
+   *
+   * @see https://github.com/e18e/eslint-plugin#performance-improvements
+   * @default true
+   */
+  performanceImprovements?: boolean
 }
 
 export interface OptionsUnicorn extends OptionsOverrides {
@@ -132,6 +158,10 @@ export interface OptionsRegExp {
   level?: 'error' | 'warn'
 }
 
+export interface OptionsIsInEditor {
+  isInEditor?: boolean
+}
+
 export interface OptionsConfig
   extends OptionsComponentExts, OptionsProjectType {
   /**
@@ -153,6 +183,17 @@ export interface OptionsConfig
    * @default []
    */
   ignores?: string[] | ((originals: string[]) => string[])
+
+  /**
+   * Disable some opinionated rules to Anthony's preference.
+   *
+   * Including:
+   * - `antfu/top-level-function`
+   * - `antfu/if-newline`
+   *
+   * @default false
+   */
+  lessOpinionated?: boolean
 
   /**
    * Core rules. Can't be disabled.
@@ -192,11 +233,25 @@ export interface OptionsConfig
   jsx?: boolean
 
   /**
+   * Options for [@e18e/eslint-plugin](https://github.com/e18e/eslint-plugin)
+   *
+   * @default true
+   */
+  e18e?: boolean | OptionsE18e
+
+  /**
    * Options for eslint-plugin-unicorn.
    *
    * @default true
    */
   unicorn?: boolean | OptionsUnicorn
+
+  /**
+   * Options for eslint-plugin-perfectionist.
+   *
+   * @default true
+   */
+  perfectionist?: boolean | OptionsOverrides
 
   /**
    * Options for eslint-plugin-import-lite.
@@ -211,6 +266,13 @@ export interface OptionsConfig
    * @default true
    */
   jsonc?: boolean | OptionsOverrides
+
+  /**
+   * Enable YAML support.
+   *
+   * @default true
+   */
+  yaml?: boolean | OptionsOverrides
 
   /**
    * Enable regexp rules.
@@ -231,6 +293,12 @@ export interface OptionsConfig
   svelte?: boolean | OptionsOverrides
 
   /**
+   * Control to disable some rules in editors.
+   * @default auto-detect based on the process.env
+   */
+  isInEditor?: boolean
+
+  /**
    * Automatically rename plugins in the config.
    *
    * @default true
@@ -249,3 +317,5 @@ export interface OptionsConfig
     svelte?: TypedFlatConfigItem['rules']
   }
 }
+
+export { type ConfigNames, type RuleOptions } from './typegen'

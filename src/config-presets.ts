@@ -1,6 +1,6 @@
 import type { OptionsConfig } from './types'
 
-// @keep-sorted
+/** @keep-sorted */
 export const CONFIG_PRESET_FULL_ON: OptionsConfig = {
   gitignore: true,
   imports: true,
@@ -8,6 +8,7 @@ export const CONFIG_PRESET_FULL_ON: OptionsConfig = {
   jsonc: true,
   jsx: true,
   node: true,
+  perfectionist: true,
   regexp: true,
   svelte: true,
   typescript: {
@@ -24,6 +25,7 @@ export const CONFIG_PRESET_FULL_OFF: OptionsConfig = {
   jsonc: false,
   jsx: false,
   node: false,
+  perfectionist: false,
   regexp: false,
   svelte: false,
   typescript: false,
