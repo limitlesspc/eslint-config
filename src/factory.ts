@@ -16,7 +16,6 @@ import {
   typescript,
   unicorn,
 } from './configs'
-import { e18e } from './configs/e18e'
 import { regexp } from './configs/regexp'
 import type { RuleOptions } from './typegen'
 import type {
@@ -70,7 +69,6 @@ export function limitlesspc(
   const {
     autoRenamePlugins = true,
     componentExts = [],
-    e18e: enableE18e = true,
     gitignore: enableGitignore = true,
     ignores: userIgnores = [],
     imports: enableImports = true,
@@ -155,15 +153,6 @@ export function limitlesspc(
     configs.push(
       imports({
         ...resolveSubOptions(options, 'imports'),
-      }),
-    )
-  }
-
-  if (enableE18e) {
-    configs.push(
-      e18e({
-        isInEditor,
-        ...(enableE18e !== true && enableE18e),
       }),
     )
   }
