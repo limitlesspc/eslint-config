@@ -101,6 +101,7 @@ export function limitlesspc(
   if (enableGitignore) {
     if (typeof enableGitignore !== 'boolean') {
       configs.push(
+        // eslint-disable-next-line unicorn/prefer-await
         interopDefault(import('eslint-config-flat-gitignore')).then((r) => [
           r({
             name: 'limitlesspc/gitignore',
@@ -110,6 +111,7 @@ export function limitlesspc(
       )
     } else {
       configs.push(
+        // eslint-disable-next-line unicorn/prefer-await
         interopDefault(import('eslint-config-flat-gitignore')).then((r) => [
           r({
             name: 'limitlesspc/gitignore',
@@ -161,7 +163,7 @@ export function limitlesspc(
     configs.push(
       e18e({
         isInEditor,
-        ...(enableE18e === true ? {} : enableE18e),
+        ...(enableE18e !== true && enableE18e),
       }),
     )
   }
@@ -245,6 +247,7 @@ export function limitlesspc(
       ['unused-imports/no-unused-imports', 'prefer-const'],
       {
         builtinRules: () =>
+          // eslint-disable-next-line unicorn/prefer-await
           import(['eslint', 'use-at-your-own-risk'].join('/')).then(
             (r) => r.builtinRules,
           ),
@@ -276,6 +279,6 @@ export function getOverrides<K extends keyof OptionsConfig>(
       options.overrides as
         Record<string, TypedFlatConfigItem['rules']> | undefined
     )?.[key],
-    ...('overrides' in sub ? sub.overrides : {}),
+    ...('overrides' in sub && sub.overrides),
   }
 }

@@ -88,21 +88,19 @@ export async function typescript(
   ): TypedFlatConfigItem {
     return {
       files,
-      ...(ignores ? { ignores } : {}),
+      ...(ignores && { ignores }),
       languageOptions: {
         parser: parserTs,
         parserOptions: {
           extraFileExtensions: componentExts.map((ext) => `.${ext}`),
           sourceType: 'module',
-          ...(typeAware ?
-            {
-              projectService: {
-                allowDefaultProject: ['./*.js'],
-                defaultProject: tsconfigPath,
-              },
-              tsconfigRootDir: process.cwd(),
-            }
-          : {}),
+          ...(typeAware && {
+            projectService: {
+              allowDefaultProject: ['./*.js'],
+              defaultProject: tsconfigPath,
+            },
+            tsconfigRootDir: process.cwd(),
+          }),
           ...parserOptions,
         },
       },
@@ -209,18 +207,16 @@ export async function typescript(
           },
         ],
 
-        ...(type === 'lib' ?
-          {
-            'ts/explicit-function-return-type': [
-              'error',
-              {
-                allowExpressions: true,
-                allowHigherOrderFunctions: true,
-                allowIIFEs: true,
-              },
-            ],
-          }
-        : {}),
+        ...(type === 'lib' && {
+          'ts/explicit-function-return-type': [
+            'error',
+            {
+              allowExpressions: true,
+              allowHigherOrderFunctions: true,
+              allowIIFEs: true,
+            },
+          ],
+        }),
         ...overrides,
       },
     },

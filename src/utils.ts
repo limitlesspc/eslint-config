@@ -148,6 +148,7 @@ export async function ensurePackages(
     } required for this config: ${nonExistingPackages.join(', ')}. Do you want to install them?`,
   })
   if (result) {
+    // eslint-disable-next-line unicorn/prefer-await
     await import('@antfu/install-pkg').then((i) =>
       i.installPackage(nonExistingPackages, { dev: true }),
     )
