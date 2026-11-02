@@ -24,7 +24,7 @@ import type {
   OptionsConfig,
   TypedFlatConfigItem,
 } from './types'
-import { interopDefault, isInEditorEnv } from './utils'
+import { interopDefault } from './utils'
 import type { Linter } from 'eslint'
 import { FlatConfigComposer } from 'eslint-flat-config-utils'
 import { isPackageExists } from 'local-pkg'
@@ -84,16 +84,6 @@ export function limitlesspc(
     unicorn: enableUnicorn = true,
   } = options
 
-  let { isInEditor } = options
-  if (isInEditor == null) {
-    isInEditor = isInEditorEnv()
-    if (isInEditor) {
-      console.log(
-        '[@antfu/eslint-config] Detected running in editor, some rules are disabled.',
-      )
-    }
-  }
-
   const configs: Array<Awaitable<TypedFlatConfigItem[]>> = []
 
   if (enableGitignore) {
@@ -126,7 +116,6 @@ export function limitlesspc(
   configs.push(
     ignores(userIgnores, !enableTypeScript),
     javascript({
-      isInEditor,
       overrides: getOverrides(options, 'javascript'),
     }),
     comments(),
@@ -229,19 +218,6 @@ export function limitlesspc(
 
   if (autoRenamePlugins) {
     composer = composer.renamePlugins(defaultPluginRenaming)
-  }
-
-  if (isInEditor) {
-    composer = composer.disableRulesFix(
-      ['unused-imports/no-unused-imports', 'prefer-const'],
-      {
-        builtinRules: () =>
-          // eslint-disable-next-line unicorn/prefer-await
-          import(['eslint', 'use-at-your-own-risk'].join('/')).then(
-            (r) => r.builtinRules,
-          ),
-      },
-    )
   }
 
   return composer

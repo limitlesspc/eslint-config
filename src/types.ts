@@ -134,10 +134,6 @@ export interface OptionsRegExp {
   level?: 'error' | 'warn'
 }
 
-export interface OptionsIsInEditor {
-  isInEditor?: boolean
-}
-
 export interface OptionsConfig
   extends OptionsComponentExts, OptionsProjectType {
   /**
@@ -260,12 +256,6 @@ export interface OptionsConfig
    * @default false
    */
   svelte?: boolean | OptionsOverrides
-
-  /**
-   * Control to disable some rules in editors.
-   * @default auto-detect based on the process.env
-   */
-  isInEditor?: boolean
 
   /**
    * Automatically rename plugins in the config.

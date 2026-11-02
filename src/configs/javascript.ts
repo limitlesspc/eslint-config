@@ -1,15 +1,11 @@
 import { pluginAntfu, pluginUnusedImports } from '../plugins'
-import type {
-  OptionsIsInEditor,
-  OptionsOverrides,
-  TypedFlatConfigItem,
-} from '../types'
+import type { OptionsOverrides, TypedFlatConfigItem } from '../types'
 import globals from 'globals'
 
 export async function javascript(
-  options: OptionsIsInEditor & OptionsOverrides = {},
+  options: OptionsOverrides = {},
 ): Promise<TypedFlatConfigItem[]> {
-  const { isInEditor = false, overrides = {} } = options
+  const { overrides = {} } = options
 
   return [
     {
@@ -228,7 +224,7 @@ export async function javascript(
           { allowNamedFunctions: false, allowUnboundThis: true },
         ],
         'prefer-const': [
-          isInEditor ? 'warn' : 'error',
+          'warn',
           {
             destructuring: 'all',
             ignoreReadBeforeAssign: true,
@@ -248,9 +244,9 @@ export async function javascript(
         'require-yield': 'error',
         'symbol-description': 'error',
         'unicode-bom': ['error', 'never'],
-        'unused-imports/no-unused-imports': isInEditor ? 'warn' : 'error',
+        'unused-imports/no-unused-imports': 'warn',
         'unused-imports/no-unused-vars': [
-          'error',
+          'warn',
           {
             args: 'after-used',
             argsIgnorePattern: '^_',
